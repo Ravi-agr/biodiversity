@@ -1,0 +1,111 @@
+{% extends "base/base.html" %}
+
+{% block pageTitle %}
+    Biodiversity Inventory of Nepal with Data Analysis and Visualization
+{% endblock %}
+
+{% block bodyContents %}
+    <!-- Header -->
+    <header id="head">
+        <div class="container">
+            <div class="row">
+
+                <form class="form-search">
+                    <div class="input-append">
+                        <input type="text" placeholder="Search Species by Scientific name, Common name or Protected Areas" style="width: 550px; height: 40px; padding-left: 10px">
+                        <button type="submit" style="width: 100px; height: 40px;">Search</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </header>
+    <!-- /Header -->
+
+    <!-- Intro -->
+    <div class="container text-center">
+        <br> <br>
+        <h2 class="thin">The best place to know about Biodiversity statistics of Nepal with proper data visualization</h2>
+        <p class="text-muted">
+            We offer the elegant visualization of Biodiversity data of Nepal.
+        </p>
+    </div>
+    <!-- /Intro-->
+
+    <!-- Highlights - jumbotron -->
+    <div class="jumbotron top-space">
+        <div class="container">
+
+            <h3 class="text-center thin">#Something Something Here#</h3>
+
+            <div class="row">
+                <div class="col-md-3 col-sm-6 highlight">
+                    <div class="h-caption"><h4><i class="fa fa-cogs fa-5"></i><a href="/protected_areas_list/">Protected Areas</a></h4></div>
+                    <div class="h-body text-center">
+                        <p>Protected areas cover a total of 23.23% of area in Nepal. 10 National Parks, 3 Wildlife reserves, 5 Conservation Area, 1 Hunting Reserve and some important Ramsar sites has been included in this section. </p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 highlight">
+                    <div class="h-caption"><h4><i class="fa fa-flash fa-5"></i>Data Insights</h4></div>
+                    <div class="h-body text-center">
+                        <p>Most of the data presented in this portal is collected from <a href="http://lib.icimod.org/record/7560">Nepal Biodiversity Resource Book</a>. About 90% of the species mentioned in the book has been recorded here. <a href="http://gbif.org">GBIF</a>, <a href="http://www.iucnredlist.org/">IUCN Red List</a> and <a href="http://www.catalogueoflife.org/">Catalouge of Life</a> are other sources.</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 highlight">
+                    <div class="h-caption"><h4><i class="fa fa-heart fa-5"> </i><a href="/protected_species">Protected Species</a></h4></div>
+                    <div class="h-body text-center">
+                        <p>A total of 38 species has been listed as <b>Protected Species</b> by Nepal Government, which comprises 26 mammals, 9 birds and 3 reptiles. 399 floral species has been listed as endemic. </p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6 highlight">
+                    <div class="h-caption"><h4><i class="fa fa-smile-o fa-5"></i><a href="api/">API Solution</a></h4></div>
+                    <div class="h-body text-center">
+                        <p>The data collected in this portal can be accessed easily in Open Data formats as CSV and JSON by using API URLs. Click here to generate necessary API URLs and download data in required format.</p>
+                    </div>
+                </div>
+            </div> <!-- /row  -->
+
+        </div>
+    </div>
+    <!-- /Highlights -->
+
+    <!-- container -->
+    <div class="container">
+
+        <h2 class="text-center top-space">Frequently Asked Questions</h2>
+        <br>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <h3>What is Biodiversity?</h3>
+                <p>Biodiversity is the branch of science which deals with Bio and Diversity.</p>
+            </div>
+            <div class="col-sm-6">
+                <h3>What is Inventory?</h3>
+                <p>Inventory is the branch of science which deals with Invent and Ory.</p>
+            </div>
+        </div> <!-- /row -->
+
+        <div class="row">
+            <div class="col-sm-6">
+                <h3>Anything about Data Analysis?</h3>
+                <p>
+                    Data Analysis beans analysis of data.
+                </p>
+            </div>
+            <div class="col-sm-6">
+                <h3>And Visualization?</h3>
+                <p>Well, its the visual represenation of the data.</p>
+            </div>
+        </div> <!-- /row -->
+
+        <div class="jumbotron top-space">
+            <h4>We offer the elegant visualization of Biodiversity data of Nepal on the basis of Districts, National Parks and Protected Areas.</h4>
+            <p class="text-right"><a class="btn btn-primary btn-large">Lets Proceed »</a></p>
+        </div>
+
+    </div>	<!-- /container -->
+
+
+
+{% endblock %}

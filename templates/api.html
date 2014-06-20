@@ -1,0 +1,223 @@
+{% extends "base/base-sidebar-left.html" %}
+
+{% block pageTitle %}API Solutions{% endblock%}
+{% block title %}API Solutions{% endblock %}
+
+{% load staticfiles %}
+
+{% block additionalCSS %}
+    <link rel="stylesheet"  href="{% static "select2/select2.css" %}">
+{% endblock %}
+
+{% block sidebarContents %}
+
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                        Species
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseOne" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <form class="form-horizontal" role="form" action="#">
+                        <div class="form-group">
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputID" placeholder="Species ID">
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <div class="col-sm-10">
+                                <select id="inputType" class="form-control">
+                                    <option value="name">Name</option>
+                                    <option value="classification">Classification</option>
+                                    <option value="status">Status</option>
+                                    <option value="protected_areas">Protected Areas</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="button" class="btn" id="speciesGenerate">Generate</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                        Protected Areas
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseTwo" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <form class="form-horizontal" role="form" action="#">
+                        <div class="form-group">
+                            <div class="col-sm-10">
+                                {% comment %}<input type="text" class="form-control" id="inputPA_ID" placeholder="Protected Area ID">{% endcomment %}
+                                <select id="inputPA_ID" placeholder="Choose a Protected Area" style="width: 275px;">
+                                    <option></option>
+                                    {% for item in protected_areas %}
+                                        <option value="{{ item.pa_id }}">{{ item.name }} {{ item.designation }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <div class="col-sm-10">
+                                <select id="inputPAType" class="form-control">
+                                    <option value="basics">Basics</option>
+                                    <option value="species_count">Species Count</option>
+                                    <option value="species_checklist">Species Checklist</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="button" class="btn" id="paGenerate">Generate</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                        Overall Checklist
+                    </a>
+                </h4>
+            </div>
+            <div id="collapseThree" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <form class="form-horizontal" role="form" action="#">
+                        <div class="form-group">
+                            <div class="col-sm-10">
+                                {% comment %}<input type="text" class="form-control" id="inputPA_ID" placeholder="Protected Area ID">{% endcomment %}
+                                <select id="inputGroup" class="form-control">
+                                    <option value="all">All</option>
+                                    {% for item in group %}
+                                        <option value="{{ item.group }}">{{ item.group }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <div class="col-sm-10">
+                                <select id="inputCountChecklist" class="form-control">
+                                    <option value="count">Species Count</option>
+                                    <option value="checklist">Species Checklist</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="button" class="btn" id="othersGenerate">Generate</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block articleContents %}
+    <header class="page-header">
+        <h1 class="page-title">API Output</h1>
+    </header>
+    <p>
+    <form class="form-horizontal" role="form">
+        <div class="form-group">
+            <label for="inputURL" class="col-sm-2 control-label">API URL</label>
+            <div class="form-inline col-sm-10">
+                <input type="text" class="form-control" id="inputURL" style="width: 85%;">
+                <button type="button" class="btn-sm" id="output">Get Output</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputJSON" class="col-sm-2 control-label">JSON Output</label>
+            <div class="col-sm-10">
+                <textarea id="inputJSON" class="form-control" rows="8" readonly="true"></textarea>
+            </div>
+        </div>
+        <div id="csv" class="pull-right"></div>
+    </form>
+    </p>
+{% endblock %}
+
+{% block additionalScripts %}
+    <script type="text/javascript" src="{% static "select2/select2.min.js" %}"></script>
+    <script type="text/javascript">
+        $("#inputPA_ID").select2();
+
+        $("#speciesGenerate").click(function(){
+           $("#inputURL").val("http://127.0.0.1:8000/api/species/"+$("#inputID").val() + "/" + $("#inputType").val());
+
+           $.getJSON( $("#inputURL").val(), function(data) {
+
+               $("#inputJSON").text(JSON.stringify(data,null,4));
+               $("#csv").html("");
+           });
+
+        });
+
+        $("#paGenerate").click(function(){
+            $("#inputURL").val("http://127.0.0.1:8000/api/protected_areas/"+$("#inputPA_ID").val() + "/" + $("#inputPAType").val());
+
+            $.getJSON( $("#inputURL").val(), function(data) {
+                if($("#inputPAType").val() == "species_checklist")
+                    $("#csv").html("<a href='csv/pa/"+$("#inputPA_ID").val()+"'>Download as CSV</a>")
+                else
+                    $("#csv").html("");
+
+
+                $("#inputJSON").text(JSON.stringify(data,null,4));
+
+            });
+
+        });
+
+        $("#othersGenerate").click(function(){
+            $("#inputURL").val("http://127.0.0.1:8000/api/"+$("#inputCountChecklist").val() + "/" + $("#inputGroup").val());
+
+            $.getJSON( $("#inputURL").val(), function(data) {
+                if($("#inputCountChecklist").val() == "checklist")
+                    $("#csv").html("<a href='csv/all/"+$("#inputGroup").val()+"'>Download as CSV</a>")
+                else
+                    $("#csv").html("");
+                $("#inputJSON").text(JSON.stringify(data,null,4));
+
+            });
+
+        });
+
+
+        $("#output").click(function(){
+
+            $.getJSON( $("#inputURL").val(), function(data) {
+
+                $("#inputJSON").text(JSON.stringify(data,null,4));
+                $("#csv").html("");
+            });
+        });
+
+
+
+
+    </script>
+{% endblock %}

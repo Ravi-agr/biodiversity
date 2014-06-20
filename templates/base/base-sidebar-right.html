@@ -1,0 +1,35 @@
+{% extends "base/base.html" %}
+
+
+{% block bodyContents %}
+    <header id="head" class="secondary"></header>
+
+    <!-- container -->
+    <div class="container">
+
+        <ol class="breadcrumb">
+            <li><a href="/index.html">Home</a></li>
+            {% block path %}{% endblock %}
+            <li class="active">{% block title %}{% endblock %}</li>
+        </ol>
+
+        <div class="row">
+
+          <!-- Article main content -->
+            <article class="col-md-8 maincontent">
+                {% block articleContents %}
+
+                {% endblock %}
+            </article>
+            <!-- /Article -->
+            <!-- Sidebar -->
+            <aside class="col-md-4 sidebar sidebar-right">
+                {% block sidebarContents %}
+                {% endblock %}
+            </aside>
+            <!-- /Sidebar -->
+
+        </div>
+    </div>	<!-- /container -->
+
+{% endblock %}

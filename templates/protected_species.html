@@ -1,0 +1,141 @@
+{% extends "base/base-sidebar-right.html" %}
+
+{% block pageTitle %}Protected Species under Nepal Government{% endblock%}
+{% block title %}Protected Species{% endblock %}
+
+{% block sidebarContents %}
+    {% load staticfiles %}
+    <div class="row widget">
+        <div class="col-xs-12">
+            <h4>Lorem ipsum dolor sit</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere, ratione delectus reiciendis nulla nisi pariatur molestias animi eos repellat? Vel.</p>
+        </div>
+    </div>
+    <div class="row widget">
+        <div class="col-xs-12">
+            <h4>Lorem ipsum dolor sit</h4>
+            <p><img src="{% static "images/1.jpg" %}" alt=""></p>
+        </div>
+    </div>
+    <div class="row widget">
+        <div class="col-xs-12">
+            <h4>Lorem ipsum dolor sit</h4>
+            <p><img src="{% static "images/2.jpg" %}" alt=""></p>
+            <p>Qui, debitis, ad, neque reprehenderit laborum soluta dolor voluptate eligendi enim consequuntur eveniet recusandae rerum? Atque eos corporis provident tenetur.</p>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block articleContents %}
+    <header class="page-header">
+        <h1 class="page-title">Protected Species under Nepal Government</h1>
+    </header>
+
+    {% for group, sections in species.items %}
+        <div class="container">
+        <div class="col-md-8">
+        <h3>{{ group }}</h3>
+
+        <div class="well-none" style="background-color:rgba(255,255,255,0.5); padding-top: 5px;">
+        <div id="{{ group }}" class="carousel slide">
+        <div class="carousel-inner">
+
+        {% for section in sections %}
+            {% if forloop.first %}
+                <div class="item active">
+            {% else %}
+                <div class="item">
+            {% endif %}
+            <div class="row">
+
+            {% for s in section %}
+
+                <div class="col-sm-4 col-xs-8"><a href="#x" class="thumbnail"><img src="{{ s.image }}" alt="Image" class="img-responsive" style="height: 160px; min-height: 160px;"></a>
+                    <div align="center">
+                    {% if s.common_name %}
+                        {{ s.common_name }}<br/>
+                    {% endif %}
+                    <i>({{ s.species_id.name }})</i>
+                    </div>
+                </div>
+
+            {% endfor %}
+            </div> <!-- Close row -->
+            </div> <!-- Close item -->
+        {% endfor %}
+        </div><!-- Close carouser-inner -->
+            <br/>
+            <a class="left carousel-control" href="#{{ group }}" data-slide="prev"><i class="fa fa-chevron-left fa-4"></i></a>
+
+            <a class="right carousel-control" href="#{{ group }}" data-slide="next"><i class="fa fa-chevron-right fa-4"></i></a>
+        </div><!-- Close carousel slide -->
+        </div><!-- Close well -->
+        </div><!-- Close col-md-8 -->
+        </div><!-- Close container -->
+    {% endfor %}
+
+
+{% endblock %}
+
+{% block additionalScripts %}
+    <script type="text/javascript">
+    $(document).ready(function() {
+    $('#Mammal').carousel({
+    interval: 0
+    })
+
+
+    $('#Birds').carousel({
+    interval: 0
+    })
+
+    $('#Herpeto').carousel({
+    interval: 0
+    })
+
+    });
+    </script>
+{% endblock %}
+
+{% block additionalCSS %}
+    <style>
+    .thumbnail {
+    display: block;
+    padding: 4px;
+    margin-bottom: 20px;
+    line-height: 1.42857143;
+    -webkit-transition: all .2s ease-in-out;
+    transition: all .2s ease-in-out;
+    border-radius: 0;
+    border: none;
+    background-color: none;
+    }
+
+    .carousel-control {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 15%;
+    opacity: .5;
+    font-size: 20px;
+    color: #000;
+    text-align: center;
+    text-shadow: none;
+    }
+    .carousel-control.left {
+    background-image: none;
+    }
+    .carousel-control.right {
+    left: auto;
+    right: 0;
+    background-image: none;
+    }
+
+    .carousel-control {
+    padding-top:10%;
+    width:5%;
+    }
+        </style>
+{% endblock %}

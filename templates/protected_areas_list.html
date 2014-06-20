@@ -1,0 +1,217 @@
+{% extends "base/base-sidebar-right.html" %}
+{% load staticfiles %}
+{% load filters %}
+{% block pageTitle %}Protected Areas{% endblock%}
+{% block title %}Protected Areas{% endblock %}
+
+{% block sidebarContents %}
+
+{% endblock %}
+
+{% block articleContents %}
+    <header class="page-header">
+        <h1 class="page-title">Protected Areas</h1>
+    </header>
+
+    <div id="map"></div>
+    {% for type,p in pa_list.items %}
+        <h3>{{ type }}</h3>
+        <ul>
+        {% for item in p %}
+            <li><a href="/protected_area/{{ item.pa_id }}/{{ item.name }}">{{ item.name }} {{ item.designation }}</a></li>
+        {% endfor %}
+        </ul>
+    {% endfor %}
+{% endblock %}
+
+{% block additionalScripts %}
+    <script src="{% static "js/leaflet.js" %}"></script>
+    <script src="{% static "js/pa_shape.geojson" %}"></script>
+
+    <script type="text/javascript">
+
+        var map = L.map('map').setView([28.2639, 84.1], 7);
+        L.tileLayer('http://{s}.tiles.mapbox.com/v3/smaske.i83ipmj1/{z}/{x}/{y}.png', {
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            maxZoom: 18
+        }).addTo(map);
+
+        function getColor(d) {
+
+            return d == "National Park" ? '#008A2E' :
+                    d == "Wildlife Reserve"  ? '#888A89' :
+                            d == "Conservation Area"  ? '#E7B28B' :
+                                    d == "Hunting Reserve"  ? '#FE8786' :
+                                            d == "National Park - Buffer Zone"   ? '#00C800' :
+                                                    d == "Ramsar Site"   ? '#455ADB' :
+                                                            d == "World Heritage Site"   ? '#F00000' :
+                                                                    d == "Zoo" ? '#FFCC00' :
+                                                                            '#008A2E';
+        }
+
+        function style(feature) {
+            return {
+                fillColor: getColor(feature.properties.desig),
+                weight: 1,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7
+            };
+        }
+
+
+        var info = L.control({position: 'topright'});
+
+        info.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+            this.update();
+            return this._div;
+        };
+
+        // method that we will use to update the control based on feature properties passed
+        info.update = function (props) {
+            this._div.innerHTML = props ?
+                    '<h4>'+props.name+' '+props.desig+'</h4>'+'<b>Estd: ' + '</b>' + (props.status_yr == 0 ? "N/A" : props.status_yr + ' AD') + '<br />' + '<b>Area: ' + '</b>' + (props.rep_area == 0 ? "N/A" : parseInt(props.rep_area) + ' sq. km.') + '<br />'
+                    : '<h4>Protected Areas</h4> Hover over a protected area';
+        };
+
+        info.addTo(map);
+
+        function highlightFeature(e) {
+            var layer = e.target;
+
+            layer.setStyle({
+                weight: 2,
+                color: '#666',
+                dashArray: '',
+                fillOpacity: 0.7
+            });
+
+
+
+            info.update(layer.feature.properties);
+        }
+
+        function resetHighlight(e) {
+            var layer = e.target;
+            geojson.resetStyle(e.target);
+            info.update();
+        }
+
+        function zoomToFeature(e) {
+            map.fitBounds(e.target.getBounds());
+        }
+
+
+
+
+        function onEachFeature(feature, layer) {
+            layer.on({
+                mouseover: highlightFeature,
+                mouseout: resetHighlight,
+                click: zoomToFeature
+            });
+
+
+
+            if(feature.properties.rep_area < 5) {
+
+                var marker = L.marker(getCenter(feature)).addTo(map);
+            }
+        }
+
+
+        geojson = L.geoJson(shapes, {
+            style: style,
+            onEachFeature: onEachFeature
+        }).addTo(map);
+
+        var legend = L.control({position: 'bottomleft'});
+
+        legend.onAdd = function (map) {
+
+            var div = L.DomUtil.create('div', 'info legend'),
+                    grades = ["National Park", "Wildlife Reserve", "Conservation Area", "Hunting Reserve", "National Park - Buffer Zone", "Ramsar Site", "World Heritage Site", "Zoo"],
+                    labels = [];
+
+            // loop through our density intervals and generate a label with a colored square for each interval
+            for (var i = 0; i < grades.length; i++) {
+                div.innerHTML += '<i style="background:' + getColor(grades[i]) + '"></i> '+ grades[i] + '<br/>';
+            }
+
+            return div;
+        };
+
+        legend.addTo(map);
+/*
+        for (var i = 0; i < shapes.features.length; i++) {
+            var pa = shape.features[i].properties;
+            if (pa.rep_area < 5) {
+                var marker = L.marker(getCenter(shapes.features[i])).addTo(map);
+            }
+
+        }*/
+
+        function getCenter(feature) {
+            var coord = feature.geometry.coordinates[0];
+            //alert(coord);
+            var sumx = 0; var sumy = 0; var n = 0;
+            for (var i =0; i<coord.length; i++) {
+                sumx += coord[i][0];
+                sumy += coord[i][1];
+                n++;
+            }
+
+            //alert(n);
+
+            var arr = [sumy/n,sumx/n];
+
+            return arr;
+        }
+
+
+
+    </script>
+
+
+
+
+{% endblock %}
+
+{% block additionalCSS %}
+    <link rel="stylesheet" href="{% static "css/leaflet.css" %}" />
+
+    <style type="text/css">
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+
+        .info {
+            padding: 6px 8px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(255,255,255,0.95);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            border-radius: 5px;
+        }
+        .info h4 {
+            margin: 0 0 5px;
+            color: #777;
+        }
+
+        .legend {
+            line-height: 18px;
+            color: #555;
+        }
+        .legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+    </style>
+
+{% endblock %}

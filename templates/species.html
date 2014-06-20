@@ -1,0 +1,65 @@
+{% extends "base/base-sidebar-right.html" %}
+{% load staticfiles %}
+{% comment %}{% load filters %}{% endcomment %}
+
+{% block pageTitle %}{% if common %}{{ common.0.common_name }} - {% endif %}{{ main.name }}{% endblock%}
+{% block title %}{{ main.name }}{% endblock %}
+
+
+
+{% block sidebarContents %}
+{% if clazz %}
+    <b>Classification</b>
+    <ul>
+        <li>Kingdom: {{ clazz.0.kingdom }}</li>
+        <li>Phylum: {{ clazz.0.phylum }}</li>
+        <li>Class: {{ clazz.0.class_field }}</li>
+        <li>Order: {{ clazz.0.order }}</li>
+        <li>Family:{{ clazz.0.family }}</li>
+        <li>Genus: {{ clazz.0.genus }}</li>
+        <li>Species: {{ name.0.accepted_name }}</li>
+    </ul>
+
+{% if status %}
+    <b>Status</b>
+    <ul>
+        {% if status.0.protected %}<li>Nepal Government: Protected</li>{% endif %}
+        {% if status.0.endemic %}<li>Endemic Species: Yes</li>{% endif %}
+        {% if status.0.cites %}<li>CITES: Appendix {{ status.0.cites }}</li>{% endif %}
+        {% if iucn.0.status %}<li>IUCN Status: {{ iucn.0.status }}</li>{% endif %}
+        {% if status.0.nrdb %}<li>NRDB Status: {{ status.0.nrdb }}</li>{% endif %}
+    </ul>
+{% endif %}
+
+{% endif %}
+{% endblock %}
+
+{% block articleContents %}
+    <header class="page-header">
+        <h1 class="page-title">{% if common %}{{ common.0.common_name }} - {% endif %}<i>{{ main.name }}</i></h1>
+    </header>
+
+    {% if img %}
+        {% for item in img %}
+            <img src="{{ item }}">
+        {% endfor %}
+    {% endif %}
+
+    {% if description %}
+        {% for item in description %}
+            {% if item.type in titles %}
+                <h4>{{ item.type|title }}</h4>
+                <p>{{ item.description|safe }}</p>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+{% endblock %}
+
+{% block additionalScripts %}
+
+{% endblock %}
+
+{% block additionalCSS %}
+
+{% endblock %}

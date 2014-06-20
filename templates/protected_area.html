@@ -1,0 +1,185 @@
+{% extends "base/base-sidebar-right.html" %}
+{% load staticfiles %}
+{% load filters %}
+{% block pageTitle %}{{ pa.name }} {{ pa.designation }}{% endblock%}
+{% block title %}{{ pa.name }} {{ pa.designation }}{% endblock %}
+
+{% block path %}<li><a href="/protected_areas_list/">Protected Areas</a></li>{% endblock %}
+
+{% block sidebarContents %}
+    {% if pa.related %}<h5>{{ pa.designation }}</h5>{% endif %}
+    <ul>
+        <li>Name: {{ pa.name }} {{ pa.designation }}</li>
+        <li>Designation: {{ pa.designation }}</li>
+        <li>Estd on: {% if pa.estd_year == 0 %}N/A{% else %}{{ pa.estd_year }} AD{% endif %}</li>
+        <li>Area: {{ pa.area }} km<sup>2</sup></li>
+        <li>IUCN Category: {{ pa.iucn_category }}</li>
+        <li>WPDA ID: {{ pa.wpda }}</li>
+    </ul>
+    {% if pa.related %}
+        <br/>
+        <h5>{{ pa.related.designation }}</h5>
+        <ul>
+            <li>Name: {{ pa.related.name }} {{ pa.related.designation }}</li>
+            <li>Designation: {{ pa.related.designation }}</li>
+            <li>Estd on: {% if pa.related.estd_year == 0 %}N/A{% else %}{{ pa.related.estd_year }} AD{% endif %}</li>
+            <li>Area: {{ pa.related.area }} km<sup>2</sup></li>
+            <li>IUCN Category: {{ pa.related.iucn_category }}</li>
+            <li>WPDA ID: {{ pa.related.wpda }}</li>
+        </ul>
+    {% endif %}
+{% endblock %}
+
+{% block articleContents %}
+    <header class="page-header">
+        <h1 class="page-title">{{ pa.name }} {{ pa.designation }}</h1>
+    </header>
+
+    <div id="map"></div>
+    <p>
+    {{ pa.description|safe }}
+    </p>
+    
+    <p>
+        <h3>Images</h3>
+        {% for image in pa.image %}
+            <img src="{{ image }}"/>
+        {% endfor %}
+
+    </p>
+
+    {% if pa.species %}
+    <h2>Recorded Species</h2>
+
+        {% for group,species in pa.species.items %}
+            <h3>{{ group }}</h3>
+            <ol>
+            {% for item in species %}
+                <li>{{ item.name }}, IMG: {{ item|image:150 }}</li>
+            {% endfor %}
+
+            </ol>
+        {% endfor %}
+
+    {% endif %}
+
+{% endblock %}
+
+{% block additionalScripts %}
+    <script src="{% static "js/leaflet.js" %}"></script>
+    <script src="{% static "js/pa_shape.geojson" %}"></script>
+
+    <script type="text/javascript">
+        var map = L.map('map').setView([{{ pa.longitude }}, {{ pa.latitude }}], getZoomLevel());
+        L.tileLayer('http://{s}.tiles.mapbox.com/v3/smaske.i83ipmj1/{z}/{x}/{y}.png', {
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            maxZoom: 18
+        }).addTo(map);
+
+        function getZoomLevel() {
+            var str = "{{ pa.area }}";
+            str = str.replace(",", "");
+            var area = parseInt(str);
+
+            if(area > 3500) return 8;
+            if(area > 900) return 9;
+            if(area > 400) return 10;
+            if(area > 100) return 11;
+            else return 12;
+
+        }
+
+
+        function style(feature) {
+            if(feature.properties.ID == {{ pa.pa_id }})
+            return {
+                fillColor: "#008A2E",
+                weight: 1,
+                opacity: 1,
+                color: 'white',
+                dashArray: '3',
+                fillOpacity: 0.7
+            };
+            else if(feature.properties.ID == {% if pa.related %}{{ pa.related.pa_id }}{% else %}""{% endif %})
+               return {
+                   fillColor: "#00C800",
+                   weight: 1,
+                   opacity: 1,
+                   color: 'white',
+                   dashArray: '3',
+                   fillOpacity: 0.7
+               }
+            else
+            return {
+                weight: 0,
+                opacity: 0,
+                fillOpacity: 0
+            }
+        }
+
+        geojson = L.geoJson(shapes, {
+            style: style
+        }).addTo(map);
+
+        {% if pa.related %}
+            var legend = L.control({position: 'topright'});
+
+            legend.onAdd = function (map) {
+
+                var div = L.DomUtil.create('div', 'info legend'),
+                        grades = ["{{ pa.name }} {{ pa.designation }}", "{{ pa.related.name }} {{ pa.related.designation }}"],
+                        labels = [];
+
+                // loop through our density intervals and generate a label with a colored square for each interval
+                div.innerHTML += '<i style="background:#008A2E"></i> '+ grades[0] + '<br/>';
+                div.innerHTML += '<i style="background:#00C800"></i> '+ grades[1] + '<br/>';
+
+                return div;
+            };
+
+            legend.addTo(map);
+        {% endif %}
+
+    </script>
+
+
+
+
+{% endblock %}
+
+{% block additionalCSS %}
+    <link rel="stylesheet" href="{% static "css/leaflet.css" %}" />
+
+    <style type="text/css">
+        #map {
+            height: 300px;
+            width: 100%;
+        }
+
+        .info {
+            padding: 6px 8px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(255,255,255,0.95);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            border-radius: 5px;
+        }
+        .info h4 {
+            margin: 0 0 5px;
+            color: #777;
+        }
+
+        .legend {
+            line-height: 18px;
+            color: #555;
+        }
+        .legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+    </style>
+
+{% endblock %}
