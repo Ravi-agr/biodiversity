@@ -25,11 +25,42 @@
     <ul>
         {% if status.0.protected %}<li>Nepal Government: Protected</li>{% endif %}
         {% if status.0.endemic %}<li>Endemic Species: Yes</li>{% endif %}
-        {% if status.0.cites %}<li>CITES: Appendix {{ status.0.cites }}</li>{% endif %}
+        {% if status.0.cites and status.0.cites != "NULL" %}<li>CITES: Appendix {{ status.0.cites }}</li>{% endif %}
         {% if iucn.0.status %}<li>IUCN Status: {{ iucn.0.status }}</li>{% endif %}
-        {% if status.0.nrdb %}<li>NRDB Status: {{ status.0.nrdb }}</li>{% endif %}
+        {% if status.0.nrdb and status.0.nrdb != "NULL"%}<li>NRDB Status: {{ status.0.nrdb }}</li>{% endif %}
+        {% if iucn.0.population_trend %}<li>Global Population Trend: {{ iucn.0.population_trend }}</li>{% endif %}
     </ul>
 {% endif %}
+    
+{% if name %}
+    <b>Accepted name: </b>{{ name.0.accepted_name }} <i>{{ name.0.accepted_authority }}</i><br/><br/>
+    <b>Synonyms</b>
+    <ul>
+    {% for item in name|slice:":5" %}
+        <li>{{ item.synonym }} <i>{{ item.authority }}</i></li>
+    {% endfor %}
+    </ul>
+   
+{% endif %}
+{% if common %}
+    <b>Common Names:</b>
+    <ul>
+    {% for item in common %}
+        <li>{{ item.common_name }}</li>
+    {% endfor %}
+    </ul>
+{% endif %}
+    
+{% if external_keys %}
+    <b>External Links</b>
+    <ul>
+    {% if external_keys.0.gbif_key %}<li><a href="http://www.gbif.org/species/{{ external_keys.0.gbif_key }}" target="_blank">Global Biodiversity Information Facility</a></li>{% endif %}
+    {% if external_keys.0.iucn_key %}<li><a href="http://www.iucnredlist.org/details/{{ external_keys.0.iucn_key }}/0" target="_blank">IUCN Red List of Threatened Species</a></li>{% endif %}
+    {% if external_keys.0.col_key %}<li><a href="http://www.catalogueoflife.org/col/details/species/id/{{ external_keys.0.col_key }}" target="_blank">Catalouge of Life</a></li>{% endif %}
+    </ul>
+{% endif %}
+
+
 
 {% endif %}
 {% endblock %}
@@ -45,6 +76,10 @@
         {% endfor %}
     {% endif %}
 
+    {% if pa %}
+        <div id="map"></div>
+    {% endif %}
+
     {% if description %}
         {% for item in description %}
             {% if item.type in titles %}
@@ -57,9 +92,196 @@
 {% endblock %}
 
 {% block additionalScripts %}
+    {% if pa %}
+    <script src="{% static "js/leaflet.js" %}"></script>
+    <script src="{% static "js/pa_shape.geojson" %}"></script>
 
+    <script type="text/javascript">
+
+        var map = L.map('map').setView([28.2639, 84.1], 7);
+        L.tileLayer('http://{s}.tiles.mapbox.com/v3/smaske.i83ipmj1/{z}/{x}/{y}.png', {
+            attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+            maxZoom: 18
+        }).addTo(map);
+
+        function getColor(d) {
+
+            return '#008A2E';
+        }
+
+
+        function style(feature) {
+            {% for item in pa %}
+                {% if forloop.first %}
+                if(feature.properties.ID == {{ item.pa_id }}) {
+                    {% else %}
+                else if(feature.properties.ID == {{ item.pa_id }}) {
+                {% endif %}
+
+                    return {
+                        fillColor: getColor(feature.properties.desig),
+                        weight: 1,
+                        opacity: 1,
+                        color: 'white',
+                        dashArray: '3',
+                        fillOpacity: 0.7
+                    };
+                }
+
+            {% endfor %}
+
+            else {
+            return {
+                weight: 0,
+                opacity: 0,
+                fillOpacity: 0
+            }
+            }
+
+        }
+
+
+        var info = L.control({position: 'topright'});
+
+        info.onAdd = function (map) {
+            this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+            this.update();
+            return this._div;
+        };
+
+        // method that we will use to update the control based on feature properties passed
+        info.update = function (props) {
+            this._div.innerHTML = props ?
+                    '<h4>'+props.name+' '+props.desig+'</h4>'+'<b>Estd: ' + '</b>' + (props.status_yr == 0 ? "N/A" : props.status_yr + ' AD') + '<br />' + '<b>Area: ' + '</b>' + (props.rep_area == 0 ? "N/A" : parseInt(props.rep_area) + ' sq. km.') + '<br />'
+                    : '<h4>Protected Areas</h4> Hover over a protected area';
+        };
+
+        info.addTo(map);
+
+        function highlightFeature(e) {
+            var layer = e.target;
+
+            layer.setStyle({
+                weight: 2,
+                color: '#666',
+                dashArray: '',
+                fillOpacity: 0.7
+            });
+
+
+
+            info.update(layer.feature.properties);
+        }
+
+        function resetHighlight(e) {
+            var layer = e.target;
+            geojson.resetStyle(e.target);
+            info.update();
+        }
+
+        function zoomToFeature(e) {
+            map.fitBounds(e.target.getBounds());
+        }
+
+
+
+
+        function onEachFeature(feature, layer) {
+
+
+        {% for item in pa %}
+            if(feature.properties.ID == {{ item.pa_id }}) {
+                layer.on({
+                    mouseover: highlightFeature,
+                    mouseout: resetHighlight,
+                    click: zoomToFeature
+                });
+
+                    var marker = L.marker(getCenter(feature)).addTo(map);
+
+            }
+
+        {% endfor %}
+
+
+
+        }
+
+
+        geojson = L.geoJson(shapes, {
+            style: style,
+            onEachFeature: onEachFeature
+        }).addTo(map);
+
+
+
+
+        /*
+         for (var i = 0; i < shapes.features.length; i++) {
+         var pa = shape.features[i].properties;
+         if (pa.rep_area < 5) {
+         var marker = L.marker(getCenter(shapes.features[i])).addTo(map);
+         }
+
+         }*/
+
+        function getCenter(feature) {
+            var coord = feature.geometry.coordinates[0];
+            //alert(coord);
+            var sumx = 0; var sumy = 0; var n = 0;
+            for (var i =0; i<coord.length; i++) {
+                sumx += coord[i][0];
+                sumy += coord[i][1];
+                n++;
+            }
+
+            //alert(n);
+
+            var arr = [sumy/n,sumx/n];
+
+            return arr;
+        }
+
+
+
+    </script>
+
+{% endif %}
 {% endblock %}
 
 {% block additionalCSS %}
+    <link rel="stylesheet" href="{% static "css/leaflet.css" %}" />
+
+    <style type="text/css">
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+
+        .info {
+            padding: 6px 8px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(255,255,255,0.95);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            border-radius: 5px;
+        }
+        .info h4 {
+            margin: 0 0 5px;
+            color: #777;
+        }
+
+        .legend {
+            line-height: 18px;
+            color: #555;
+        }
+        .legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            opacity: 0.7;
+        }
+    </style>
 
 {% endblock %}

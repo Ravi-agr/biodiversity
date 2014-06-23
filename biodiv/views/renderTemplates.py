@@ -143,7 +143,8 @@ def species(request,id,name):
           'external_keys':external_keys,
           'description':description,
           'titles':description_titles,
-          'common':common}
+          'common':common,
+          'pa':pa}
 
     print img
     return render(request, 'species.html', sp)
