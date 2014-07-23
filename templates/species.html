@@ -2,107 +2,339 @@
 {% load staticfiles %}
 {% comment %}{% load filters %}{% endcomment %}
 
-{% block pageTitle %}{% if common %}{{ common.0.common_name }} - {% endif %}{{ main.name }}{% endblock%}
+{% block pageTitle %}{% if common %}{{ common.0.common_name|title }} - {% endif %}{{ main.name }}{% endblock%}
 {% block title %}{{ main.name }}{% endblock %}
 
 
 
 {% block sidebarContents %}
 {% if clazz %}
-    <b>Classification</b>
-    <ul>
-        <li>Kingdom: {{ clazz.0.kingdom }}</li>
-        <li>Phylum: {{ clazz.0.phylum }}</li>
-        <li>Class: {{ clazz.0.class_field }}</li>
-        <li>Order: {{ clazz.0.order }}</li>
-        <li>Family:{{ clazz.0.family }}</li>
-        <li>Genus: {{ clazz.0.genus }}</li>
-        <li>Species: {{ name.0.accepted_name }}</li>
-    </ul>
+    <div class="panel panel-info">
+    <div class="panel-heading">
+        <b class="panel-title">Classification</b>
+    </div>
+    <table class="table table-condensed">
+        <tr>
+            <th style="padding-left: 25px">Kingdom</th><td><a href="/taxa/kingdom/{{ clazz.0.kingdom }}">{{ clazz.0.kingdom }}</a></td>
+        </tr>
+        <tr>
+            <th style="padding-left: 25px">Phylum</th><td><a href="/taxa/phylum/{{ clazz.0.phylum }}">{{ clazz.0.phylum }}</a></td>
+        </tr>
+        <tr>
+            <th style="padding-left: 25px">Class</th><td><a href="/taxa/class_field/{{ clazz.0.class_field }}">{{ clazz.0.class_field }}</a></td>
+        </tr>
+        <tr>
+            <th style="padding-left: 25px">Order</th><td><a href="/taxa/order/{{ clazz.0.order }}">{{ clazz.0.order }}</a></td>
+        </tr>
+        <tr>
+            <th style="padding-left: 25px">Family</th><td><a href="/taxa/family/{{ clazz.0.family }}">{{ clazz.0.family }}</a></td>
+        </tr>
+        <tr>
+            <th style="padding-left: 25px">Genus</th><td><a href="/taxa/genus/{{ clazz.0.genus }}">{{ clazz.0.genus }}</a></td>
+        </tr>
+        <tr>
+            <th style="padding-left: 25px">Species</th><td><a href="#">{{ name.0.accepted_name }}</a></td>
+        </tr>
+    </table>
+    {% comment %}<ul class="list-group">
+        <li class="list-group-item">Kingdom: {{ clazz.0.kingdom }}</li>
+        <li class="list-group-item">Phylum: {{ clazz.0.phylum }}</li>
+        <li class="list-group-item">Class: {{ clazz.0.class_field }}</li>
+        <li class="list-group-item">Order: {{ clazz.0.order }}</li>
+        <li class="list-group-item">Family:{{ clazz.0.family }}</li>
+        <li class="list-group-item">Genus: {{ clazz.0.genus }}</li>
+        <li class="list-group-item">Species: {{ name.0.accepted_name }}</li>
+    </ul>{% endcomment %}
+    </div>
 
+{% endif %}
 {% if status %}
-    <b>Status</b>
-    <ul>
-        {% if status.0.protected %}<li>Nepal Government: Protected</li>{% endif %}
-        {% if status.0.endemic %}<li>Endemic Species: Yes</li>{% endif %}
-        {% if status.0.cites and status.0.cites != "NULL" %}<li>CITES: Appendix {{ status.0.cites }}</li>{% endif %}
-        {% if iucn.0.status %}<li>IUCN Status: {{ iucn.0.status }}</li>{% endif %}
-        {% if status.0.nrdb and status.0.nrdb != "NULL"%}<li>NRDB Status: {{ status.0.nrdb }}</li>{% endif %}
-        {% if iucn.0.population_trend %}<li>Global Population Trend: {{ iucn.0.population_trend }}</li>{% endif %}
-    </ul>
+    <div class="panel panel-info">
+    <div class="panel-heading">
+        <b class="panel-title">Status</b>
+    </div>
+    
+    <table class="table-condensed">
+        {% if iucn.0.status %}<tr><td colspan="2" align="center"><img src="/assets/images/iucn/{{ iucn.0.status }}.png" style="width: 100%;"></td></tr>{% endif %}
+        {% if status.0.cites and status.0.cites != "NULL" %}<tr><td colspan="2"><div align="center">Listed in <b>CITES Appendix {{ status.0.cites }}</b></div></td> </tr>{% endif %}
+
+        {% if status.0.protected %}<tr><th style="padding-left: 15px;" width="50%">Nepal Government</th><td width="50%">Protected</td></tr>{% endif %}
+        {% if status.0.endemic %}}<tr><th style="padding-left: 15px;">Endemic Species</th><td>Yes</td></tr>{% endif %}
+        {% if status.0.nrdb and status.0.nrdb != "NULL"%}<tr><th style="padding-left: 15px;">NRDB Status</th><td>{{ nrdb }}</td></tr>{% endif %}
+        {% if iucn.0.population_trend %}<tr><th style="padding-left: 15px;">Population Trend</th>
+            <td>
+                {% if iucn.0.population_trend|lower == "increasing" %}
+                    <p class="text-success">{{ iucn.0.population_trend|title }} <span class="glyphicon glyphicon-arrow-up"></span></p>
+                {% endif %}
+                {% if iucn.0.population_trend|lower == "decreasing" %}
+                    <p class="text-danger">{{ iucn.0.population_trend|title }} <span class="glyphicon glyphicon-arrow-down"></span></p>
+                {% endif %}
+                {% if iucn.0.population_trend|lower == "stable" %}
+                    <p class="text-info">{{ iucn.0.population_trend|title }} <span class="glyphicon glyphicon-ok"></span></p>
+                {% endif %}
+                {% if iucn.0.population_trend|lower == "unknown" %}
+                    <p class="text-warning">{{ iucn.0.population_trend|title }} <span class="glyphicon glyphicon-question-sign"></span></p>
+                {% endif %}
+            </td></tr>
+        {% endif %}
+    </table>
+    </div>
 {% endif %}
     
 {% if name %}
-    <b>Accepted name: </b>{{ name.0.accepted_name }} <i>{{ name.0.accepted_authority }}</i><br/><br/>
-    <b>Synonyms</b>
-    <ul>
-    {% for item in name|slice:":5" %}
-        <li>{{ item.synonym }} <i>{{ item.authority }}</i></li>
-    {% endfor %}
-    </ul>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <b class="panel-title">Synonyms</b>
+        </div>
+        <table class="table-condensed">
+
+            {% for item in name|slice:":5" %}
+                <tr><td colspan="2" style="padding-left: 15px;">{{ item.synonym }} <i>{{ item.authority }}</i></td></tr>
+            {% endfor %}
+
+            <tr class="success">
+                <th width="40%" valign="top">Accepted name</th>
+                <td>{{ name.0.accepted_name }} <i>{{ name.0.accepted_authority }}</i></td>
+            </tr>
+
+        </table>
+    </div>
+
    
 {% endif %}
 {% if common %}
-    <b>Common Names:</b>
-    <ul>
+    <div class="panel panel-info">
+    <div class="panel-heading">
+        <b class="panel-title">Common names</b>
+    </div>
+
+    <ul class="list-group">
     {% for item in common %}
-        <li>{{ item.common_name }}</li>
+        <li class="list-group-item">{{ item.common_name }}</li>
     {% endfor %}
     </ul>
+    </div>
 {% endif %}
-    
-{% if external_keys %}
-    <b>External Links</b>
-    <ul>
-    {% if external_keys.0.gbif_key %}<li><a href="http://www.gbif.org/species/{{ external_keys.0.gbif_key }}" target="_blank">Global Biodiversity Information Facility</a></li>{% endif %}
-    {% if external_keys.0.iucn_key %}<li><a href="http://www.iucnredlist.org/details/{{ external_keys.0.iucn_key }}/0" target="_blank">IUCN Red List of Threatened Species</a></li>{% endif %}
-    {% if external_keys.0.col_key %}<li><a href="http://www.catalogueoflife.org/col/details/species/id/{{ external_keys.0.col_key }}" target="_blank">Catalouge of Life</a></li>{% endif %}
+
+
+    {% if habitat %}
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <b class="panel-title">Habitats</b>
+            </div>
+            <ul class="list-group">
+                {% for key,item in habitat.items %}
+                    <li class="list-group-item">
+                        {{ key }}<br/>
+                        <ul>
+                            {% for value in item %}
+                                <li>{{ value }}</li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {% if threats %}
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <b class="panel-title">Threats</b>
+            </div>
+            <ul class="list-group">
+                {% for key,item in threats.items %}
+                    <li class="list-group-item">
+                        {{ key }}<br/>
+                        <ul>
+                            {% for value in item %}
+                                <li>{{ value }}</li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {% if conservation %}
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <b class="panel-title">Actions</b>
+            </div>
+            <ul class="list-group">
+                {% for key,item in conservation.items %}
+                    <li class="list-group-item">
+                        {{ key }}<br/>
+                        <ul>
+                            {% for value in item %}
+                                <li>{{ value }}</li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+
+
+    {% if external_keys %}
+    <div class="panel panel-info">
+    <div class="panel-heading">
+        <b class="panel-title">External Links</b>
+    </div>
+
+    <ul class="list-group">
+    {% if external_keys.0.gbif_key %}<li class="list-group-item"><a href="http://www.gbif.org/species/{{ external_keys.0.gbif_key }}" target="_blank">Global Biodiversity Information Facility</a></li>{% endif %}
+    {% if external_keys.0.iucn_key %}<li class="list-group-item"><a href="http://www.iucnredlist.org/details/{{ external_keys.0.iucn_key }}/0" target="_blank">IUCN Red List of Threatened Species</a></li>{% endif %}
+    {% if external_keys.0.col_key %}<li class="list-group-item"><a href="http://www.catalogueoflife.org/col/details/species/id/{{ external_keys.0.col_key }}" target="_blank">Catalouge of Life</a></li>{% endif %}
     </ul>
+    </div>
+
+
 {% endif %}
 
 
 
-{% endif %}
+
 {% endblock %}
 
 {% block articleContents %}
     <header class="page-header">
-        <h1 class="page-title">{% if common %}{{ common.0.common_name }} - {% endif %}<i>{{ main.name }}</i></h1>
+        <h1 class="page-title">{% if common %}{{ common.0.common_name|title }} - {% endif %}<i>{{ main.name }}</i></h1>
     </header>
 
+    {% if abstract %}
+        <p>
+            {{ abstract.description|safe }}
+        </p>
+    {% endif %}
+
     {% if img %}
-        {% for item in img %}
-            <img src="{{ item }}">
-        {% endfor %}
+
+
+        <div id="blueimp-gallery-carousel" class="blueimp-gallery blueimp-gallery-carousel">
+            <div class="slides"></div>
+            <h3 class="title"></h3>
+            <a class="prev">‹</a>
+            <a class="next">›</a>
+            <a class="close">×</a>
+            <a class="play-pause"></a>
+            <ol class="indicator"></ol>
+        </div>
+
+        <div id="links">
+            {% for image in img %}
+                <a href="{{ image }}"></a>
+            {% endfor %}
+        </div>
+
+
+
     {% endif %}
 
     {% if pa %}
+        <h3>Occurrences in Nepal</h3>
+        <p>
+            {% if common %}{{ common.0.common_name|title }} - {% endif %}<i>{{ main.name }}</i> has been recorded in following protected areas of Nepal.
+            {% if pa|length <= 5 %}
+                <ul>
+                    {% for field in pa %}
+                        <li><a href="/protected_area/{{ field.pa_id }}/{{ field.name }}">{{ field.name }} {{ field.designation }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <table class="table pa_list" align="center"><tr>
+                    {% for field in pa %}
+                        <td><a href="/protected_area/{{ field.pa_id }}/{{ field.name }}">{{ field.name }} {{ field.designation }}</a></td>
+                        {% if forloop.last %}
+                            </tr>
+                        {% else %}
+                            {% if forloop.counter|divisibleby:"3" %}
+                                </tr><tr>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </table>
+            {% endif %}
         <div id="map"></div>
-    {% endif %}
+        </p>
 
-    {% if description %}
+    {% endif %}
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
         {% for item in description %}
             {% if item.type in titles %}
-                <h4>{{ item.type|title }}</h4>
-                <p>{{ item.description|safe }}</p>
+                {% if forloop.first %}
+                    <li class="active"><a href="#{{ item.type|slugify }}" role="tab" data-toggle="tab">{{ item.type|title }}</a></li>
+                {% else %}
+                    <li><a href="#{{ item.type|slugify }}" role="tab" data-toggle="tab">{{ item.type|title }}</a></li>
+                {% endif %}
             {% endif %}
         {% endfor %}
-    {% endif %}
+
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        {% for item in description %}
+            {% if item.type in titles %}
+                {% if forloop.first %}
+                    <div class="tab-pane active" id="{{ item.type|slugify }}" style="padding: 5px;">{{ item.description|safe }}</div>
+                {% else %}
+                    <div class="tab-pane" id="{{ item.type|slugify }}" style="padding: 5px;">{{ item.description|safe }}</div>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+
+    </div>
+
 
 {% endblock %}
 
 {% block additionalScripts %}
+    {% if img %}
+    <script src="{% static "js/blueimp-gallery.min.js" %}"></script>
+
+    <script type="text/javascript">
+        document.getElementById('links').onclick = function (event) {
+            event = event || window.event;
+            var target = event.target || event.srcElement,
+                    link = target.src ? target.parentNode : target,
+                    options = {index: link, event: event},
+                    links = this.getElementsByTagName('a');
+            blueimp.Gallery(links, options);
+        };
+
+        blueimp.Gallery(
+                document.getElementById('links').getElementsByTagName('a'),
+                {
+                    container: '#blueimp-gallery-carousel',
+                    carousel: true
+                }
+        );
+    </script>
+    {% endif %}
+
     {% if pa %}
+
     <script src="{% static "js/leaflet.js" %}"></script>
     <script src="{% static "js/pa_shape.geojson" %}"></script>
 
     <script type="text/javascript">
+
+
 
         var map = L.map('map').setView([28.2639, 84.1], 7);
         L.tileLayer('http://{s}.tiles.mapbox.com/v3/smaske.i83ipmj1/{z}/{x}/{y}.png', {
             attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
             maxZoom: 18
         }).addTo(map);
+
+        $("body").on("shown.bs.tab", "#pa-map", function() {
+            map.invalidateSize(false);
+        });
 
         function getColor(d) {
 
@@ -250,6 +482,7 @@
 {% endblock %}
 
 {% block additionalCSS %}
+    <link rel="stylesheet" href="{% static "css/blueimp-gallery.min.css" %}">
     <link rel="stylesheet" href="{% static "css/leaflet.css" %}" />
 
     <style type="text/css">
@@ -281,6 +514,18 @@
             float: left;
             margin-right: 8px;
             opacity: 0.7;
+        }
+
+        span.glyphicon {
+            font-size: 1.2em;
+        }
+
+        table.pa_list {
+            width: auto !important;
+        }
+        table.pa_list td {
+
+            width: auto !important;
         }
     </style>
 

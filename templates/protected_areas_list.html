@@ -13,15 +13,28 @@
         <h1 class="page-title">Protected Areas</h1>
     </header>
 
+
     <div id="map"></div>
-    {% for type,p in pa_list.items %}
+    {% for type in pa_type %}
         <h3>{{ type }}</h3>
-        <ul>
-        {% for item in p %}
-            <li><a href="/protected_area/{{ item.pa_id }}/{{ item.name }}">{{ item.name }} {{ item.designation }}</a></li>
+        <ol class="rounded-list">
+        {% for typ,p in pa_list.items %}
+            {% if typ == type %}
+                {% for item in p  %}
+                    <li><a href="/protected_area/{{ item.pa_id }}/{{ item.name }}">{{ item.name }} {{ item.designation }}</a></li>
+                {% endfor %}
+            {% endif %}
         {% endfor %}
-        </ul>
+        </ol>
     {% endfor %}
+{#    {% for type,p in pa_list.items %}#}
+{#        <h3>{{ type }}</h3>#}
+{#        <ul>#}
+{#        {% for item in p %}#}
+{#            <li><a href="/protected_area/{{ item.pa_id }}/{{ item.name }}">{{ item.name }} {{ item.designation }}</a></li>#}
+{#        {% endfor %}#}
+{#        </ul>#}
+{#    {% endfor %}#}
 {% endblock %}
 
 {% block additionalScripts %}

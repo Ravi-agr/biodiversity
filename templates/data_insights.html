@@ -1,0 +1,325 @@
+{% extends "base/base.html" %}
+{% load staticfiles %}
+{% block pageTitle %}Data Insights{% endblock %}
+{% block bodyContents %}
+    <header id="head" class="secondary"></header>
+
+    <!-- container -->
+    <div class="container">
+
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active">Data Insights</li>
+        </ol>
+
+        <hr/>
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="active"><a href="#species" role="tab" data-toggle="tab">Species Overview</a></li>
+            <li><a href="#threats" role="tab" data-toggle="tab">Threats Overview</a></li>
+            <li><a href="#pa" role="tab" data-toggle="tab">Protected Areas</a></li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div class="tab-pane active" id="species"><div class="row">
+
+                <!-- Sidebar -->
+                <aside class="col-md-4 sidebar sidebar-left">
+                    <div class="panel-group" id="sidebar_species">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#sidebar_species" href="#species_collapseOne">
+                                        Species Hierarchical Diversity
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="species_collapseOne" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    <form class="form-horizontal" role="form" action="#">
+                                        <div class="form-group">
+                                            <div class="col-sm-10">
+                                                <select id="inputPA_ID_sp_one">
+                                                    <option value="0" selected="selected">All</option>
+                                                    {% for item in pa %}
+                                                        <option value="{{ item.pa_id }}">{{ item.name }} {{ item.designation }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-2 col-sm-10">
+                                                <button type="button" class="btn" id="sp_one_show">Show</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#sidebar_species" href="#species_collapseTwo">
+                                        Taxonomic Classification Tree
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="species_collapseTwo" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    <div class="panel-body">
+                                        <form class="form-horizontal" role="form" action="#">
+                                            <div class="form-group">
+                                                <div class="col-sm-10">
+                                                    <select id="inputPA_ID_sp_two">
+                                                        <option value="0" selected="selected">All</option>
+                                                        {% for item in pa %}
+                                                            <option value="{{ item.pa_id }}">{{ item.name }} {{ item.designation }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <div class="col-sm-offset-2 col-sm-10">
+                                                    <button type="button" class="btn" id="sp_two_show">Show</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#sidebar_species" href="#species_collapseThree">
+                                        Animal Census Data
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="species_collapseThree" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#sidebar_species" href="#species_collapseFour">
+                                        Birds Insights
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="species_collapseFour" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#sidebar_species" href="#species_collapseFive">
+                                        IUCN Habitat Classification
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="species_collapseFive" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+                <!-- /Sidebar -->
+
+                <!-- Article main content -->
+                <article class="col-md-8 maincontent">
+                    {% comment %}<header class="page-header">
+                        <h3 class="page-title">Species</h1>
+                    </header>{% endcomment %}
+                    <div id="species_body"></div>
+                </article>
+                <!-- /Article -->
+
+            </div></div>
+            <div class="tab-pane" id="threats">
+                <!-- Sidebar -->
+                <aside class="col-md-4 sidebar sidebar-left">
+                    <div class="panel-group" id="sidebar_threats">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#sidebar_threats" href="#threats_collapseOne">
+                                        IUCN Red List Categories
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="threats_collapseOne" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#sidebar_threats" href="#threats_collapseTwo">
+                                        CITES Appendix
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="threats_collapseTwo" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#sidebar_threats" href="#threats_collapseThree">
+                                        NRDB Status
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="threats_collapseThree" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#sidebar_threats" href="#threats_collapseFour">
+                                        IUCN Threats Classification
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="threats_collapseFour" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#sidebar_threats" href="#threats_collapseFive">
+                                        IUCN Conservation Measures
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="threats_collapseFive" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+                <!-- /Sidebar -->
+
+                <!-- Article main content -->
+                <article class="col-md-8 maincontent">
+                    <header class="page-header">
+                        <h1 class="page-title">Threats</h1>
+                    </header>
+                </article>
+                <!-- /Article -->
+
+            </div>
+            <div class="tab-pane" id="pa">
+                <!-- Sidebar -->
+                <aside class="col-md-4 sidebar sidebar-left">
+                    <div class="panel-group" id="sidebar_pa">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#sidebar_pa" href="#pa_collapseOne">
+                                        Area Coverage
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="pa_collapseOne" class="panel-collapse collapse in">
+                                <div class="panel-body">
+                                    <button class="btn btn-primary" id="pa_one_show">Show</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#sidebar_pa" href="#pa_collapseTwo">
+                                        Species variation and Comparison
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="pa_collapseTwo" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h4 class="panel-title">
+                                    <a data-toggle="collapse" data-parent="#sidebar_pa" href="#pa_collapseThree">
+                                        Central Zoo Insights
+                                    </a>
+                                </h4>
+                            </div>
+                            <div id="pa_collapseThree" class="panel-collapse collapse">
+                                <div class="panel-body">
+                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+                <!-- /Sidebar -->
+
+                <!-- Article main content -->
+                <article class="col-md-8 maincontent">
+                    <header class="page-header">
+                        <div id="pa_body"></div>
+                    </header>
+                </article>
+                <!-- /Article -->
+            </div>
+        </div>
+
+
+    </div>	<!-- /container -->
+
+{% endblock %}
+{% block additionalScripts %}
+    <script type="text/javascript" src="{% static "select2/select2.min.js" %}"></script>
+    <script src="{% static "js/d3.v3.min.js" %}"></script>
+    <script type="text/javascript">
+        $("#inputPA_ID_sp_one").select2();
+        //$("#inputPA_ID_sp_two").select2();
+
+        $("#sp_one_show").click(function(){
+            var id = $("#inputPA_ID_sp_one").val();
+            $("#species_body").html("Loading...").load("/data_insights/species/variety/"+id+"/");
+        });
+        $("#sp_two_show").click(function(){
+            var id = $("#inputPA_ID_sp_two").val();
+            alert("two");
+            $("#species_body").html("Loading...").load("/data_insights/species/tree/"+id+"/");
+
+        });
+        $("#pa_one_show").click(function(){
+            $("#pa_body").html("Loading...").load("/data_insights/protected_areas/area/");
+        });
+    </script>
+{% endblock %}
+
+{% block additionalCSS %}
+    <link rel="stylesheet"  href="{% static "select2/select2.css" %}">
+{% endblock %}

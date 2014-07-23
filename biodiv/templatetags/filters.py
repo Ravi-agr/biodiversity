@@ -6,3 +6,17 @@ register = template.Library()
 @register.filter
 def image(obj, resolution):
     return obj.getURL(resolution)
+
+@register.filter
+def common_name(obj):
+    cn = obj.getCommonName()
+    if cn:
+        if "," in cn[0].common_name:
+            return cn[0].common_name.split(",")[0]
+        return cn[0].common_name
+    else:
+        return None
+
+@register.filter
+def abstract(obj):
+    return obj.getAbstract()

@@ -1,0 +1,47 @@
+{% extends "base/base-sidebar-right.html" %}
+{% load staticfiles %}
+{% load filters %}
+{% block pageTitle %}{{ type|title }}: {{ keyword|title }}{% endblock%}
+{% block title %}{{ type|title }}: {{ keyword|title }}{% endblock %}
+
+
+
+{% block sidebarContents %}
+
+{% endblock %}
+
+{% block articleContents %}
+    <header class="page-header">
+        <h1 class="page-title">{{type|title }}: {{ keyword|title }}</h1>
+    </header>
+
+    {% if description %}
+        <p>{{ description }} - Source: Wikipedia</p>
+    {% endif %}
+
+    <h3>Species in Nepal of {{type|title }}: {{ keyword|title }}</h3>
+    <div class="thumbnail-list">
+        <ul>
+
+            {% for item in species|slice:":10" %}
+                <li>
+                    <a href="/species/{{ item.species_id }}/{{ item.name|slugify }}/" style="text-decoration : none; color : #000000;"">
+                    <img src="{% if item|image:150 %}{{ item|image:150|first }}{% else %}{% static "images/default_thumb.png" %}{% endif %}" style="width: 150px; height: 150px;">
+                    <h3>{% if item|common_name %}{{ item|common_name|title }} - {% endif %}<i>{{ item.name }}</i></h3>
+                    <p>{% if item|abstract %}{{ item|abstract|truncatewords:40|striptags }}{% endif %}</p>
+                    </a>
+                </li>
+            {% endfor %}
+
+        </ul>
+    </div
+{% endblock %}
+
+{% block additionalScripts %}
+
+{% endblock %}
+
+{% block additionalCSS %}
+
+
+{% endblock %}

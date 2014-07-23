@@ -50,8 +50,13 @@
             <div class="row">
 
             {% for s in section %}
-
-                <div class="col-sm-4 col-xs-8"><a href="#x" class="thumbnail"><img src="{{ s.image }}" alt="Image" class="img-responsive" style="height: 160px; min-height: 160px;"></a>
+<div class="col-sm-4 col-xs-8"><div class="view view-sixth"><a href="/species/{{ s.species_id.species_id }}/{{ s.species_id.name|slugify }}/" class="thumbnail"><img style="width: 175px; height: 160px;"src="{{ s.image }}" alt="Image" class="img-responsive" style="height: 160px; min-height: 160px;"></a><div class="mask">
+                        {% comment %}<a href=""><h2>{{ s.common_name }}</h2></a>
+                        <a href=""><p style="color: #fffbfb; ">Lorem ipsum in the desert lipsum of kicksum</p></a>{% endcomment %}
+{#                        <a href="#" class="info" style="color: black;">Read More</a>#}
+                    </div>
+                </div>
+{#                <div class="col-sm-4 col-xs-8"><div class="morph pic"><a href="#x" class="thumbnail"><img src="{{ s.image }}" alt="Image" class="img-responsive" style="height: 160px; min-height: 160px;"></a></div>#}
                     <div align="center">
                     {% if s.common_name %}
                         {{ s.common_name }}<br/>

@@ -1,12 +1,3 @@
-# This is an auto-generated Django model module.
-# You'll have to do the following manually to clean this up:
-#   * Rearrange models' order
-#   * Make sure each model has one field with primary_key=True
-#   * Remove `managed = False` lines for those models you wish to give write DB access
-# Feel free to rename the models, but don't rename db_table values or field names.
-#
-# Also note: You'll have to insert the output of 'django-admin.py sqlcustom [appname]'
-# into your database.
 from __future__ import unicode_literals
 
 from django.db import models, connection
@@ -81,13 +72,20 @@ class Species(models.Model):
         managed = False
         db_table = 'Species'
 
-    def getURL(self,resolution):
+    def getURL(self,resolution = None):
         img = Images.objects.getURL(self.species_id, resolution)
         return img
 
     def getCommonName(self):
         return CommonNames.objects.filter(species_id=self.species_id)
 
+
+    def getAbstract(self):
+        des = Description.objects.filter(species_id=self.species_id, type="abstract")
+        if des:
+            return des[0].description
+        else:
+            return None
 
 
 class ProtectedAreasManager(models.Manager):
@@ -120,12 +118,25 @@ class ProtectedAreasManager(models.Manager):
     def speciesChecklistObj(self,id):
 
         species = SpeciesPa.objects.filter(pa_id = id).select_related()
+        speices_with_img = Images.objects.all().values_list('species_id', flat = True).distinct()
+
         data = {}
         for item in species:
             s = item.species_id
+            if not s.species_id in speices_with_img:
+                continue
             if not s.group in data:
                 data[s.group] = []
             data[s.group].append(s);
+
+        for item in species:
+            s = item.species_id
+            if s.species_id in speices_with_img:
+                continue
+            if not s.group in data:
+                data[s.group] = []
+            data[s.group].append(s);
+
         return data
 
 
@@ -293,7 +304,7 @@ class IucnThreat(models.Model):
         db_table = 'IUCN Threat'
 
 class ImagesManager(models.Manager):
-    def getURL(self, id, resolution):
+    def getURL(self, id, resolution = None):
 
 
         import re
@@ -305,12 +316,15 @@ class ImagesManager(models.Manager):
         for img in images:
 
             if 'wikipedia'in img.url:
-                match = re.search(r"[^a-zA-Z](commons)[^a-zA-Z]", img.url)
-                pos = match.end(1)
-                url = img.url[:pos] + "/thumb" + img.url[pos:]
-                file = url.split('/')[-1]
-                url = url + "/" + str(resolution) +"px-" +file
-                thumbs.append(url)
+                if not resolution:
+                    thumbs.append(img.url)
+                else:
+                    match = re.search(r"[^a-zA-Z](commons)[^a-zA-Z]", img.url)
+                    pos = match.end(1)
+                    url = img.url[:pos] + "/thumb" + img.url[pos:]
+                    file = url.split('/')[-1]
+                    url = url + "/" + str(resolution) +"px-" +file
+                    thumbs.append(url)
             else:
                 thumbs.append(img.url)
 

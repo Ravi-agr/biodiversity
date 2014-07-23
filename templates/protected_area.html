@@ -8,25 +8,25 @@
 
 {% block sidebarContents %}
     {% if pa.related %}<h5>{{ pa.designation }}</h5>{% endif %}
-    <ul>
+    <ol class="rounded-list">
         <li>Name: {{ pa.name }} {{ pa.designation }}</li>
         <li>Designation: {{ pa.designation }}</li>
         <li>Estd on: {% if pa.estd_year == 0 %}N/A{% else %}{{ pa.estd_year }} AD{% endif %}</li>
         <li>Area: {{ pa.area }} km<sup>2</sup></li>
         <li>IUCN Category: {{ pa.iucn_category }}</li>
         <li>WPDA ID: {{ pa.wpda }}</li>
-    </ul>
+    </ol>
     {% if pa.related %}
         <br/>
         <h5>{{ pa.related.designation }}</h5>
-        <ul>
+        <ol class="rounded-list">
             <li>Name: {{ pa.related.name }} {{ pa.related.designation }}</li>
             <li>Designation: {{ pa.related.designation }}</li>
             <li>Estd on: {% if pa.related.estd_year == 0 %}N/A{% else %}{{ pa.related.estd_year }} AD{% endif %}</li>
             <li>Area: {{ pa.related.area }} km<sup>2</sup></li>
             <li>IUCN Category: {{ pa.related.iucn_category }}</li>
             <li>WPDA ID: {{ pa.related.wpda }}</li>
-        </ul>
+        </ol>
     {% endif %}
 {% endblock %}
 
@@ -39,33 +39,118 @@
     <p>
     {{ pa.description|safe }}
     </p>
-    
+
+    {% if pa.images|length > 0 %}
     <p>
         <h3>Images</h3>
-        {% for image in pa.image %}
-            <img src="{{ image }}"/>
-        {% endfor %}
+        <div id="blueimp-gallery-carousel" class="blueimp-gallery blueimp-gallery-carousel">
+            <div class="slides"></div>
+            <h3 class="title"></h3>
+            <a class="prev">‹</a>
+            <a class="next">›</a>
+            <a class="close">×</a>
+            <a class="play-pause"></a>
+            <ol class="indicator"></ol>
+        </div>
 
+    <div id="links">
+        {% for image in pa.image %}
+            <a href="{{ image }}"></a>
+        {% endfor %}
+    </div>
+        
     </p>
+    {% endif %}
 
     {% if pa.species %}
     <h2>Recorded Species</h2>
-
-        {% for group,species in pa.species.items %}
+        {% for group in type %}
+        {% for typ,species in pa.species.items %}
+            {% if group == typ %}
             <h3>{{ group }}</h3>
-            <ol>
-            {% for item in species %}
-                <li>{{ item.name }}, IMG: {{ item|image:150 }}</li>
+                <div class="pull-right">
+                    {% if species|length > 10 %}
+                        Showing 10 of {{  species|length}} species.
+
+                    <a data-toggle="modal" href="#" data-target="#myModal" onclick="loadModal('{{ pa.pa_id }}','{{ group }}')">
+                        View All
+                    </a>
+                    {% endif %}
+                </div>
+                <br/>
+                <div class="thumbnail-list">
+<ul>
+
+            {% for item in species|slice:":10" %}
+                <li>
+                    <a href="/species/{{ item.species_id }}/{{ item.name|slugify }}/" style="text-decoration : none; color : #000000;"">
+
+                    <img src="{% if item|image:150 %}{{ item|image:150|first }}{% else %}{% static "images/default_thumb.png" %}{% endif %}" style="height: 150px; width:150px;" >
+
+                    <h3>{% if item|common_name %}{{ item|common_name|title }} - {% endif %}<i>{{ item.name }}</i></h3>
+                    <p>{% if item|abstract %}{{ item|abstract|truncatewords:40|striptags }}{% endif %}</p>
+                    </a>
+                </li>
             {% endfor %}
 
-            </ol>
+            </ul>
+            </div>
+            {% endif %}
+        {% endfor %}
         {% endfor %}
 
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Modal title</h4>
+
+                    </div>
+                    <div class="modal-body"></div>
+
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
     {% endif %}
 
 {% endblock %}
 
 {% block additionalScripts %}
+    <script src="{% static "js/blueimp-gallery.min.js" %}"></script>
+
+    <script type="text/javascript">
+        document.getElementById('links').onclick = function (event) {
+            event = event || window.event;
+            var target = event.target || event.srcElement,
+                    link = target.src ? target.parentNode : target,
+                    options = {index: link, event: event},
+                    links = this.getElementsByTagName('a');
+            blueimp.Gallery(links, options);
+        };
+
+        blueimp.Gallery(
+                document.getElementById('links').getElementsByTagName('a'),
+                {
+                    container: '#blueimp-gallery-carousel',
+                    carousel: true
+                }
+        );
+    </script>
+
+    <script type="text/javascript">
+        function loadModal(id,type){
+            $(".modal-title").html(type);
+            $(".modal-body").load("/species_list/"+id+"/"+type+"/");
+        }
+    </script>
+
     <script src="{% static "js/leaflet.js" %}"></script>
     <script src="{% static "js/pa_shape.geojson" %}"></script>
 
@@ -148,6 +233,7 @@
 {% endblock %}
 
 {% block additionalCSS %}
+    <link rel="stylesheet" href="{% static "css/blueimp-gallery.min.css" %}">
     <link rel="stylesheet" href="{% static "css/leaflet.css" %}" />
 
     <style type="text/css">
@@ -179,6 +265,13 @@
             float: left;
             margin-right: 8px;
             opacity: 0.7;
+        }
+
+        #myModal .modal-dialog
+        {
+            width: 780px;/* your width */
+            /*overflow-y:auto;
+            max-height:95%;*/
         }
     </style>
 

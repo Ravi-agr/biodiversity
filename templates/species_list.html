@@ -1,0 +1,22 @@
+{% load filters %}
+{% load staticfiles %}
+{% for typ,species in pa.species.items %}
+    {% if group == typ %}
+
+        <div class="thumbnail-list">
+            <ul>
+
+                {% for item in species %}
+                    <li>
+                        <a href="/species/{{ item.species_id }}/{{ item.name|slugify }}/" style="text-decoration : none; color : #000000;"">
+                        <img src="{% if item|image:150 %}{{ item|image:150|first }}{% else %}{% static "images/default_thumb.png" %}{% endif %}" style="width: 150px; height: 150px;">
+                        <h3>{% if item|common_name %}{{ item|common_name|title }} - {% endif %}<i>{{ item.name }}</i></h3>
+                        <p>{% if item|abstract %}{{ item|abstract|truncatewords:40|striptags }}{% endif %}</p>
+                        </a>
+                    </li>
+                {% endfor %}
+
+            </ul>
+        </div>
+    {% endif %}
+{% endfor %}
