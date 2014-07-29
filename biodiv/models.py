@@ -117,7 +117,7 @@ class ProtectedAreasManager(models.Manager):
 
     def speciesChecklistObj(self,id):
 
-        species = SpeciesPa.objects.filter(pa_id = id).select_related()
+        species = SpeciesPa.objects.filter(pa_id = id).select_related().order_by('?')
         speices_with_img = Images.objects.all().values_list('species_id', flat = True).distinct()
 
         data = {}

@@ -5,7 +5,52 @@
 {% block title %}Protected Areas{% endblock %}
 
 {% block sidebarContents %}
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <b class="panel-title">Quick Fact</b>
+        </div>
 
+        <div id="fact" style="padding: 5px;">
+        {{ fact|safe }}
+
+        </div>
+    </div>
+
+    <div class="panel panel-info">
+    <div class="panel-heading">
+        <b class="panel-title">Types of Protected Area</b>
+    </div>
+
+        <div id="chart1" align="center" style="padding: 5px;">
+            <div align="right">
+                <input type="radio" name="choice" value="1" checked=""> By Number &nbsp;
+                <input type="radio" name="choice" value="2"> By Area (km<sup>2</sup>)
+            </div>
+            <input type="hidden" id="data_type" value="1">
+        </div>
+    </div>
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <b class="panel-title">Fauna Types in Protected Areas</b>
+        </div>
+
+        <div id="chart2" align="center">
+
+
+        </div>
+    </div>
+
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <b class="panel-title">Flora Types in Protected Areas</b>
+        </div>
+
+        <div id="chart3" align="center">
+
+
+        </div>
+    </div>
 {% endblock %}
 
 {% block articleContents %}
@@ -15,8 +60,11 @@
 
 
     <div id="map"></div>
+    <div class="row row-sm-height">
     {% for type in pa_type %}
-        <h3>{{ type }}</h3>
+
+        <div class="col-md-6 col-sm-height col-top">
+            <h3>{{ type }}</h3>
         <ol class="rounded-list">
         {% for typ,p in pa_list.items %}
             {% if typ == type %}
@@ -26,18 +74,289 @@
             {% endif %}
         {% endfor %}
         </ol>
+        </div>
+        {% if forloop.last %}
+            </div>
+        {% else %}
+            {% if forloop.counter|divisibleby:"2" %}
+                </div><div class="row row-sm-height">
+            {% endif %}
+        {% endif %}
     {% endfor %}
-{#    {% for type,p in pa_list.items %}#}
-{#        <h3>{{ type }}</h3>#}
-{#        <ul>#}
-{#        {% for item in p %}#}
-{#            <li><a href="/protected_area/{{ item.pa_id }}/{{ item.name }}">{{ item.name }} {{ item.designation }}</a></li>#}
-{#        {% endfor %}#}
-{#        </ul>#}
-{#    {% endfor %}#}
 {% endblock %}
 
 {% block additionalScripts %}
+    <script src="{% static "js/d3.v3.min.js" %}"></script>
+    <script src="{% static "js/3DPie.js" %}"></script>
+    <script type="text/javascript">
+        (function() {
+            var pa_count, pa_area;
+            $.ajax({
+                url: "/api/pie/pa_count",
+                async: false,
+                dataType: 'json',
+                success: function(data) {
+
+                    pa_count = data;
+                }
+            });
+            $.ajax({
+                url: "/api/pie/pa_area",
+                async: false,
+                dataType: 'json',
+                success: function(data) {
+
+                    pa_area = data;
+                }
+            });
+
+
+
+
+            var color = d3.scale.category20();
+
+            var svg = d3.select("#chart1").append("svg").attr("width",300).attr("height",300);
+
+            svg.append("g").attr("id","salesDonut");
+
+
+            Donut3D.draw("salesDonut", getData(), 150, 150, 130, 100, 30, 0.4);
+
+            $('input[name=choice]').change(function(){
+                Donut3D.transition("salesDonut", getData(), 130, 100, 30, 0.4);
+            });
+
+            function getData(){
+                var data_type = document.getElementById("data_type");
+                if(data_type.value == "1") {
+                    data_type.value = "2";
+                    return pa_count.map(function(d){
+                        return {label:d.label.replace(/[^A-Z]/g, ''), value:d.value, color:color(d.label)};});
+                }
+                else {
+                    data_type.value = "1";
+                    return pa_area.map(function(d){
+                        return {label:d.label.replace(/[^A-Z]/g, ''), value:d.value, color:color(d.label)};});
+                }
+
+            }
+        })();
+
+        (function(){
+            var margin = {top: 20, right: 20, bottom: 50, left: 40},
+                    width = 350 - margin.left - margin.right,
+                    height = 300 - margin.top - margin.bottom;
+
+            var x = d3.scale.ordinal()
+                    .rangeRoundBands([0, width], .1);
+
+            var y = d3.scale.linear()
+                    .rangeRound([height, 0]);
+
+            var color = d3.scale.ordinal()
+                    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b"]);
+
+            var xAxis = d3.svg.axis()
+                    .scale(x)
+                    .orient("bottom");
+
+            var yAxis = d3.svg.axis()
+                    .scale(y)
+                    .orient("left")
+                    .tickFormat(d3.format(".2s"));
+
+            var svg = d3.select("#chart2").append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            d3.json("/api/stackedbar/pa_fauna_count/", function(error, data) {
+
+                color.domain(d3.keys(data[0]).filter(function(key) { return key !== "PA"; }));
+
+                data.forEach(function(d) {
+                    var y0 = 0;
+                    d.ages = color.domain().map(function(name) { return {name: name, y0: y0, y1: y0 += +d[name]}; });
+                    d.total = d.ages[d.ages.length - 1].y1;
+                });
+
+                data.sort(function(a, b) { return b.total - a.total; });
+
+                x.domain(data.map(function(d) { return d.PA; }));
+                y.domain([0, d3.max(data, function(d) { return d.total; })]);
+
+                svg.append("g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(0," + height + ")")
+                        .call(xAxis)
+                        .selectAll("text")
+
+                        .style("text-anchor", "end")
+                        .attr("dx", "-.8em")
+                        .attr("dy", ".15em")
+
+                        .attr("transform", function(d) {
+                            return "translate(-5,0) rotate(-90)"
+                        });
+
+
+                svg.append("g")
+                        .attr("class", "y axis")
+                        .call(yAxis)
+                        .append("text")
+                        .attr("transform", "rotate(-90)")
+                        .attr("y", 6)
+                        .attr("dy", ".71em")
+                        .style("text-anchor", "end")
+                        .text("Population");
+
+                var state = svg.selectAll(".state")
+                        .data(data)
+                        .enter().append("g")
+                        .attr("class", "g")
+                        .attr("transform", function(d) { return "translate(" + x(d.PA) + ",0)"; });
+
+                state.selectAll("rect")
+                        .data(function(d) { return d.ages; })
+                        .enter().append("rect")
+                        .attr("width", x.rangeBand())
+                        .attr("y", function(d) { return y(d.y1); })
+                        .attr("height", function(d) { return y(d.y0) - y(d.y1); })
+                        .style("fill", function(d) { return color(d.name); });
+
+                var legend = svg.selectAll(".legend")
+                        .data(color.domain().slice().reverse())
+                        .enter().append("g")
+                        .attr("class", "legend")
+                        .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+                legend.append("rect")
+                        .attr("x", width - 18)
+                        .attr("width", 18)
+                        .attr("height", 18)
+                        .style("fill", color);
+
+                legend.append("text")
+                        .attr("x", width - 24)
+                        .attr("y", 9)
+                        .attr("dy", ".35em")
+                        .style("text-anchor", "end")
+                        .text(function(d) { return d; });
+
+            });
+
+        })();
+
+        (function(){
+            var margin = {top: 20, right: 20, bottom: 50, left: 40},
+                    width = 350 - margin.left - margin.right,
+                    height = 300 - margin.top - margin.bottom;
+
+            var x = d3.scale.ordinal()
+                    .rangeRoundBands([0, width], .1);
+
+            var y = d3.scale.linear()
+                    .rangeRound([height, 0]);
+
+            var color = d3.scale.ordinal()
+                    .range([ "#8a89a6", "#7b6888"]);
+
+            var xAxis = d3.svg.axis()
+                    .scale(x)
+                    .orient("bottom");
+
+            var yAxis = d3.svg.axis()
+                    .scale(y)
+                    .orient("left")
+                    .tickFormat(d3.format(".2s"));
+
+            var svg = d3.select("#chart3").append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            d3.json("/api/stackedbar/pa_flora_count/", function(error, data) {
+
+                color.domain(d3.keys(data[0]).filter(function(key) { return key !== "PA"; }));
+
+                data.forEach(function(d) {
+                    var y0 = 0;
+                    d.ages = color.domain().map(function(name) { return {name: name, y0: y0, y1: y0 += +d[name]}; });
+                    d.total = d.ages[d.ages.length - 1].y1;
+                });
+
+                data.sort(function(a, b) { return b.total - a.total; });
+
+                x.domain(data.map(function(d) { return d.PA; }));
+                y.domain([0, d3.max(data, function(d) { return d.total; })]);
+
+                svg.append("g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(0," + height + ")")
+                        .call(xAxis)
+                        .selectAll("text")
+
+                        .style("text-anchor", "end")
+                        .attr("dx", "-.8em")
+                        .attr("dy", ".15em")
+
+                        .attr("transform", function(d) {
+                            return "translate(-5,0) rotate(-90)"
+                        });
+
+
+                svg.append("g")
+                        .attr("class", "y axis")
+                        .call(yAxis)
+                        .append("text")
+                        .attr("transform", "rotate(-90)")
+                        .attr("y", 6)
+                        .attr("dy", ".71em")
+                        .style("text-anchor", "end")
+                        .text("Population");
+
+                var state = svg.selectAll(".state")
+                        .data(data)
+                        .enter().append("g")
+                        .attr("class", "g")
+                        .attr("transform", function(d) { return "translate(" + x(d.PA) + ",0)"; });
+
+                state.selectAll("rect")
+                        .data(function(d) { return d.ages; })
+                        .enter().append("rect")
+                        .attr("width", x.rangeBand())
+                        .attr("y", function(d) { return y(d.y1); })
+                        .attr("height", function(d) { return y(d.y0) - y(d.y1); })
+                        .style("fill", function(d) { return color(d.name); });
+
+                var legend = svg.selectAll(".legend")
+                        .data(color.domain().slice().reverse())
+                        .enter().append("g")
+                        .attr("class", "legend")
+                        .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+                legend.append("rect")
+                        .attr("x", width - 18)
+                        .attr("width", 18)
+                        .attr("height", 18)
+                        .style("fill", color);
+
+                legend.append("text")
+                        .attr("x", width - 24)
+                        .attr("y", 9)
+                        .attr("dy", ".35em")
+                        .style("text-anchor", "end")
+                        .text(function(d) { return d; });
+
+            });
+
+        })();
+
+    </script>
+    
+    
     <script src="{% static "js/leaflet.js" %}"></script>
     <script src="{% static "js/pa_shape.geojson" %}"></script>
 
@@ -224,6 +543,109 @@
             float: left;
             margin-right: 8px;
             opacity: 0.7;
+        }
+
+            /* columns of same height styles */
+        .container-xs-height {
+            display:table;
+            padding-left:0px;
+            padding-right:0px;
+        }
+        .row-xs-height {
+            display:table-row;
+        }
+        .col-xs-height {
+            display:table-cell;
+            float:none;
+        }
+        @media (min-width: 768px) {
+            .container-sm-height {
+                display:table;
+                padding-left:0px;
+                padding-right:0px;
+            }
+            .row-sm-height {
+                display:table-row;
+            }
+            .col-sm-height {
+                display:table-cell;
+                float:none;
+            }
+        }
+        @media (min-width: 992px) {
+            .container-md-height {
+                display:table;
+                padding-left:0px;
+                padding-right:0px;
+            }
+            .row-md-height {
+                display:table-row;
+            }
+            .col-md-height {
+                display:table-cell;
+                float:none;
+            }
+        }
+        @media (min-width: 1200px) {
+            .container-lg-height {
+                display:table;
+                padding-left:0px;
+                padding-right:0px;
+            }
+            .row-lg-height {
+                display:table-row;
+            }
+            .col-lg-height {
+                display:table-cell;
+                float:none;
+            }
+        }
+
+            /* vertical alignment styles */
+        .col-top {
+            vertical-align:top;
+        }
+        .col-middle {
+            vertical-align:middle;
+        }
+        .col-bottom {
+            vertical-align:bottom;
+        }
+
+        path.slice{
+            stroke-width:2px;
+        }
+        polyline{
+            opacity: .3;
+            stroke: black;
+            stroke-width: 2px;
+            fill: none;
+        }
+        svg text.percent{
+            fill:black;
+            text-anchor:middle;
+            font-size:12px;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        }
+
+
+        #chart2, #chart3 {
+            font: 10px sans-serif;
+        }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+
+        .bar {
+            fill: steelblue;
+        }
+
+        .x.axis path {
+            display: none;
         }
     </style>
 

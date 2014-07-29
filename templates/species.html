@@ -1,6 +1,6 @@
 {% extends "base/base-sidebar-right.html" %}
 {% load staticfiles %}
-{% comment %}{% load filters %}{% endcomment %}
+{% load filters %}
 
 {% block pageTitle %}{% if common %}{{ common.0.common_name|title }} - {% endif %}{{ main.name }}{% endblock%}
 {% block title %}{{ main.name }}{% endblock %}
@@ -122,38 +122,62 @@
             <div class="panel-heading">
                 <b class="panel-title">Habitats</b>
             </div>
-            <ul class="list-group">
-                {% for key,item in habitat.items %}
-                    <li class="list-group-item">
-                        {{ key }}<br/>
-                        <ul>
+
+        <div class="panel-group" id="accordion_habitat">
+        {% for key,item in habitat.items %}
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <p class="panel-title">
+                        <a data-toggle="collapse" data-parent="#accordion_habitat" href="#{{ key|slugify }}">
+                            {{ key }}
+                        </a>
+                    </p>
+                </div>
+                <div id="{{ key|slugify }}" class="panel-collapse collapse">
+                    <div class="panel-body">
+                        <ul type="disc">
                             {% for value in item %}
                                 <li>{{ value }}</li>
                             {% endfor %}
                         </ul>
-                    </li>
-                {% endfor %}
-            </ul>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+            </div>
         </div>
     {% endif %}
+
 
     {% if threats %}
         <div class="panel panel-info">
             <div class="panel-heading">
                 <b class="panel-title">Threats</b>
             </div>
-            <ul class="list-group">
+            <div class="panel-group" id="accordion_threats">
                 {% for key,item in threats.items %}
-                    <li class="list-group-item">
-                        {{ key }}<br/>
-                        <ul>
-                            {% for value in item %}
-                                <li>{{ value }}</li>
-                            {% endfor %}
-                        </ul>
-                    </li>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <p class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion_threats" href="#{{ key|slugify }}">
+                                    {{ key }}
+                                </a>
+                            </p>
+                        </div>
+                        <div id="{{ key|slugify }}" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <ul type="disc">
+                                    {% for value in item %}
+                                        <li>{{ value }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
                 {% endfor %}
-            </ul>
+            </div>
         </div>
     {% endif %}
 
@@ -162,18 +186,29 @@
             <div class="panel-heading">
                 <b class="panel-title">Actions</b>
             </div>
-            <ul class="list-group">
+            <div class="panel-group" id="accordion_conservation">
                 {% for key,item in conservation.items %}
-                    <li class="list-group-item">
-                        {{ key }}<br/>
-                        <ul>
-                            {% for value in item %}
-                                <li>{{ value }}</li>
-                            {% endfor %}
-                        </ul>
-                    </li>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <p class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion_conservation" href="#{{ key|slugify }}">
+                                    {{ key }}
+                                </a>
+                            </p>
+                        </div>
+                        <div id="{{ key|slugify }}" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <ul type="disc">
+                                    {% for value in item %}
+                                        <li>{{ value }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
                 {% endfor %}
-            </ul>
+            </div>
         </div>
     {% endif %}
 
@@ -262,6 +297,9 @@
         </p>
 
     {% endif %}
+
+    {% if description %}
+    <h3>Species Details from GBIF</h3>
     <!-- Nav tabs -->
     <ul class="nav nav-tabs" role="tablist">
         {% for item in description %}
@@ -290,6 +328,25 @@
 
     </div>
 
+    {% endif %}
+    {% if related %}
+    <h3>Similar Species</h3>
+    <div class="row">
+        {% for item in related|slice:":4" %}
+            <div class="col-sm-6 col-md-3">
+                <a href="/species/{{ item.species_id }}/{{ item.name|slugify }}/" style="text-decoration : none; color : #000000;">
+                <div class="thumbnail">
+                    <img src="{% if item|image:171 %}{{ item|image:150|first }}{% else %}{% static "images/default_thumb.png" %}{% endif %}" style="height: 180px; width:171px;;" >
+                    <div class="caption">
+                        {% if item|common_name %}{{ item|common_name|title }} - {% endif %}<i>{{ item.name }}</i>
+                    </div>
+                </div>
+                </a>
+            </div>
+
+        {% endfor %}
+    </div>
+    {% endif %}
 
 {% endblock %}
 

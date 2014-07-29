@@ -1,0 +1,185 @@
+{% load staticfiles %}
+<h3 style="padding-left:60px;">Area coverage of Protected Areas in Nepal (1973-2010)</h3>
+<script>
+    var margin = {top: 20, right: 55, bottom: 30, left: 40},
+            width  = 800 - margin.left - margin.right,
+            height = 475  - margin.top  - margin.bottom;
+
+    var x = d3.scale.ordinal()
+            .rangeRoundBands([0, width], .1);
+
+    var y = d3.scale.linear()
+            .rangeRound([height, 0]);
+
+    var xAxis = d3.svg.axis()
+            .scale(x)
+            .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+            .scale(y)
+            .orient("left");
+
+    var line = d3.svg.line()
+
+            .x(function (d) { return x(d.label) + x.rangeBand() / 2; })
+            .y(function (d) { return y(d.value); });
+
+    var color = d3.scale.category20();
+
+    var svg = d3.select("#line").append("svg")
+            .attr("width",  width  + margin.left + margin.right)
+            .attr("height", height + margin.top  + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    d3.csv("{% static "data/pa_area.csv" %}", function (error, data) {
+
+        var labelVar = 'Year';
+        var description = 'Description'
+        var varNames = d3.keys(data[0]).filter(function (key) { return key !== labelVar && key !== description});
+
+
+        var seriesData = varNames.map(function (name) {
+            return {
+                name: name,
+                values: data.map(function (d) {
+                    return {name: name, label: d[labelVar], value: +d[name], description: getRelevantDescription(name, d['Description'])};
+                })
+            };
+        });
+
+        x.domain(data.map(function (d) { return d.Year; }));
+        y.domain([
+            d3.min(seriesData, function (c) {
+                return d3.min(c.values, function (d) { return d.value; });
+            }),
+            d3.max(seriesData, function (c) {
+                return d3.max(c.values, function (d) { return d.value; });
+            })
+        ]);
+
+        svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis)
+                .selectAll("text")
+
+                .style("text-anchor", "end")
+                .attr("dx", "-.8em")
+                .attr("dy", ".15em")
+
+                .attr("transform", function(d) {
+                    return "translate(-5,0) rotate(-90)"
+                });
+
+        svg.append("g")
+                .attr("class", "y axis")
+                .call(yAxis)
+                .append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", 6)
+                .attr("dy", ".71em")
+                .style("text-anchor", "end")
+                .text("Area in sq. km.");
+
+        var series = svg.selectAll(".series")
+                .data(seriesData)
+                .enter().append("g")
+                .attr("class", "series");
+
+        series.append("path")
+                .attr("class", "line")
+                .attr("d", function (d) { return line(d.values); })
+                .style("stroke", function (d) { return color(d.name); })
+                .style("stroke-width", "4px")
+                .style("fill", "none")
+
+        var prev = 0;
+        series.selectAll(".point")
+                .data(function (d) {
+                    return d.values;
+                })
+                .enter().append("circle")
+                .attr("class", "point")
+                .attr("cx", function (d) { return x(d.label) + x.rangeBand()/2; })
+                .attr("cy", function (d) { return y(d.value); })
+                .attr("r", "5px")
+                .attr("visibility",function (d){ return (d.description == "" ?"hidden":"visible")})
+                .style("fill", function (d) { return color(d.name); })
+                .style("stroke", "grey")
+                .style("stroke-width", "2px")
+                .on("mouseover", function (d) { if(d.description != "") showPopover.call(this, d); })
+                .on("mouseout",  function (d) { if(d.description != "") removePopovers(); })
+
+        var legend = svg.selectAll(".legend")
+                .data(varNames.slice().reverse())
+                .enter().append("g")
+                .attr("class", "legend")
+                .attr("transform", function (d, i) { return "translate(55," + i * 20 + ")"; });
+
+        legend.append("rect")
+                .attr("x", width - 10)
+                .attr("width", 10)
+                .attr("height", 10)
+                .style("fill", color)
+                .style("stroke", "grey");
+
+        legend.append("text")
+                .attr("x", width - 12)
+                .attr("y", 6)
+                .attr("dy", ".35em")
+                .style("text-anchor", "end")
+                .text(function (d) { return d; });
+
+        function removePopovers () {
+            $('.popover').each(function() {
+                $(this).remove();
+            });
+        }
+
+        function getRelevantDescription(name, description) {
+            if (name == "Total") return description.replace(/<br>/g,", ")
+            var nameInit = name.replace(/[^A-Z]/g, '');
+            var protected_areas = description.split("<br>");
+            var relevent_pas = [];
+            for (var i = 0; i < protected_areas.length; i++) {
+                if (protected_areas[i].indexOf(nameInit) > -1 && (nameInit == "BZ" || protected_areas[i].indexOf("BZ") < 0)) {
+                    relevent_pas.push(protected_areas[i]);
+                }
+            };
+
+            return ( relevent_pas.length > 0 ? relevent_pas.join(", ") : "");
+        }
+
+        function showPopover (d) {
+
+            $(this).popover({
+                title: d.name,
+                placement: 'auto top',
+                container: 'body',
+                trigger: 'manual',
+                html : true,
+                content: function() {
+
+                    return "<p style='font: 9px sans-serif; color: #121401;'><b>Year:</b> " + d.label +
+                            "<br/><b>Area:</b> " + (d.value<1000?d.value:d3.format(",")(d.value ? d.value: d.y1 - d.y0)) + " km<sup>2</sup>" +
+                            "<br/><b>New Protected Areas:</b><br/>"+d.description+"</p>"; }
+            });
+            $(this).popover('show')
+        }
+    });
+</script>
+<style type="text/css">
+    #line {
+        font: 9px sans-serif;
+        color: #121401;
+    }
+     #line .axis path,
+     #line .axis line {
+        fill: none;
+        stroke: #121401;
+        stroke-width: 2px;
+        shape-rendering: crispEdges;
+    }
+</style>
+<div id="line"></div>

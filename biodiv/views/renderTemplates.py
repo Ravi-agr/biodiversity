@@ -60,8 +60,8 @@ def protectedAreasList(request):
         if not item.designation in p: p[item.designation] = []
         p[item.designation].append(item)
 
-    type = ["National Park", "Wildlife Reserve", "Conservation Area", "Hunting Reserve", "Ramsar Site", "World Heritage Site"]
-    return render(request, 'protected_areas_list.html', {'pa_list': p, 'pa_type':type})
+    type = ["National Park", "Conservation Area", "Wildlife Reserve",  "Hunting Reserve", "Ramsar Site", "World Heritage Site"]
+    return render(request, 'protected_areas_list.html', {'pa_list': p, 'pa_type':type, 'fact':random_fact()})
 
 
 def protectedSpecies(request):
@@ -144,7 +144,7 @@ def species(request,id,name):
 
     external_keys = ExternalKeys.objects.filter(species_id = id)
     description = Description.objects.filter(species_id = id).exclude(type = "abstract").distinct('type')
-    description_titles = ["biology", "characteristics", "conservation","threats","habitat"]
+    description_titles = ["biology", "characteristics", "conservation","threats","habitat","description","uses","distribution and habitat","behaviour","behaviour and ecology","habits","reproduction","behavior","medicinal uses","diet","medicinal uses"]
     abstract = Description.objects.filter(species_id = id, type__iexact = "abstract")
     if abstract:
         abstract = abstract[0]
@@ -246,7 +246,17 @@ def species(request,id,name):
 
     iucn_classification["conservation"] = d
 
+    types = ['kingdom', 'phylum', 'class_field', 'order', 'family', 'genus']
+    related = []
 
+    if clazz:
+        for item in reversed(types):
+            x = Classification.objects.filter(**{item: getattr(clazz[0],item)}).exclude(species_id__species_id = id).select_related()
+            for a in x:
+                if not a.species_id in related:
+                    related.append(a.species_id)
+                if len(related) > 5: break
+            if len(related) > 5: break
 
     sp = {'main': s,
           'name':names,
@@ -266,7 +276,8 @@ def species(request,id,name):
           'titles':description_titles,
           'abstract':abstract,
           'common':common,
-          'pa':pa}
+          'pa':pa,
+          'related': related}
 
 
     return render(request, 'species.html', sp)
@@ -317,3 +328,9 @@ def species_list(request, id, type):
     pa.species =  ProtectedAreas.objects.speciesChecklistObj(pa.pa_id)
 
     return render(request, 'species_list.html', {'pa':pa, 'group':type})
+
+def random_fact():
+    f = open("facts.txt","r")
+    facts = f.readlines()
+    from random import randrange
+    return facts[randrange(len(facts))]

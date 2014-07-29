@@ -7,26 +7,59 @@
 {% block path %}<li><a href="/protected_areas_list/">Protected Areas</a></li>{% endblock %}
 
 {% block sidebarContents %}
-    {% if pa.related %}<h5>{{ pa.designation }}</h5>{% endif %}
-    <ol class="rounded-list">
-        <li>Name: {{ pa.name }} {{ pa.designation }}</li>
-        <li>Designation: {{ pa.designation }}</li>
-        <li>Estd on: {% if pa.estd_year == 0 %}N/A{% else %}{{ pa.estd_year }} AD{% endif %}</li>
-        <li>Area: {{ pa.area }} km<sup>2</sup></li>
-        <li>IUCN Category: {{ pa.iucn_category }}</li>
-        <li>WPDA ID: {{ pa.wpda }}</li>
-    </ol>
+    <div class="panel panel-info">
+        <div class="panel-heading">
+            <b class="panel-title">{% if pa.related %}{{ pa.designation }}{% else %}Quick View{% endif %}</b>
+        </div>
+        <table class="table-condensed">
+            <tr><th>Name</th><td>{{ pa.name }} {{ pa.designation }}</td></tr>
+            <tr><th>Designation</th><td>{{ pa.designation }}</td></tr>
+            <tr><th>Estd. on</th><td>{% if pa.estd_year == 0 %}N/A{% else %}{{ pa.estd_year }} AD{% endif %}</td></tr>
+            <tr><th>Area</th><td>{% if pa.area == 0 %}N/A{% else %}{{ pa.area }} km<sup>2</sup>{% endif %}</td></tr>
+            <tr><th>IUCN Category</th><td>{{ pa.iucn_category }}</td></tr>
+
+        </table>
+
+    </div>
+
     {% if pa.related %}
-        <br/>
-        <h5>{{ pa.related.designation }}</h5>
-        <ol class="rounded-list">
-            <li>Name: {{ pa.related.name }} {{ pa.related.designation }}</li>
-            <li>Designation: {{ pa.related.designation }}</li>
-            <li>Estd on: {% if pa.related.estd_year == 0 %}N/A{% else %}{{ pa.related.estd_year }} AD{% endif %}</li>
-            <li>Area: {{ pa.related.area }} km<sup>2</sup></li>
-            <li>IUCN Category: {{ pa.related.iucn_category }}</li>
-            <li>WPDA ID: {{ pa.related.wpda }}</li>
-        </ol>
+
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <b class="panel-title">{{ pa.related.designation }}</b>
+            </div>
+            <table class="table-condensed">
+                <tr><th>Name</th><td>{{ pa.related.name }} {{ pa.related.designation }}</td></tr>
+                <tr><th>Designation</th><td>{{ pa.related.designation }}</td></tr>
+                <tr><th>Estd. on</th><td>{% if pa.related.estd_year == 0 %}N/A{% else %}{{ pa.related.estd_year }} AD{% endif %}</td></tr>
+                <tr><th>Area</th><td>{% if pa.related.area == 0 %}N/A{% else %}{{ pa.related.area }} km<sup>2</sup>{% endif %}</td></tr>
+                <tr><th>IUCN Category</th><td>{{ pa.related.iucn_category }}</td></tr>
+
+            </table>
+
+        </div>
+    {% endif %}
+    {% if pa.species %}
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <b class="panel-title">Species in {{ pa.name }} {{ pa.designation }}</b>
+            </div>
+
+            <div id="chart1" align="center">
+
+
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                <b class="panel-title">Threatened and Near threatened species in {{ pa.name }} {{ pa.designation }}</b>
+            </div>
+
+            <div id="chart2" align="center">
+
+
+            </div>
+        </div>
     {% endif %}
 {% endblock %}
 
@@ -40,7 +73,7 @@
     {{ pa.description|safe }}
     </p>
 
-    {% if pa.images|length > 0 %}
+    {% if pa.image %}
     <p>
         <h3>Images</h3>
         <div id="blueimp-gallery-carousel" class="blueimp-gallery blueimp-gallery-carousel">
@@ -83,7 +116,7 @@
 
             {% for item in species|slice:":10" %}
                 <li>
-                    <a href="/species/{{ item.species_id }}/{{ item.name|slugify }}/" style="text-decoration : none; color : #000000;"">
+                    <a href="/species/{{ item.species_id }}/{{ item.name|slugify }}/" style="text-decoration : none; color : #000000;">
 
                     <img src="{% if item|image:150 %}{{ item|image:150|first }}{% else %}{% static "images/default_thumb.png" %}{% endif %}" style="height: 150px; width:150px;" >
 
@@ -125,7 +158,191 @@
 {% block additionalScripts %}
     <script src="{% static "js/blueimp-gallery.min.js" %}"></script>
 
+    <script src="{% static "js/d3.v3.min.js" %}"></script>
     <script type="text/javascript">
+        {% if pa.species %}
+        (function(){
+            var margin = {top: 20, right: 20, bottom: 50, left: 40},
+                    width = 350 - margin.left - margin.right,
+                    height = 300 - margin.top - margin.bottom;
+
+            var x = d3.scale.ordinal()
+                    .rangeRoundBands([0, width], .1);
+
+            var y = d3.scale.linear()
+                    .rangeRound([height, 0]);
+
+            var color = d3.scale.ordinal()
+                    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+
+            var xAxis = d3.svg.axis()
+                    .scale(x)
+                    .orient("bottom");
+
+            var yAxis = d3.svg.axis()
+                    .scale(y)
+                    .orient("left")
+                    .tickFormat(d3.format(".2s"));
+
+            var svg = d3.select("#chart2").append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            d3.json("/api/stackedbar/pa_fauna/{{ pa.pa_id }}/", function(error, data) {
+
+                color.domain(d3.keys(data[0]).filter(function(key) { return key !== "Group"; }));
+
+                data.forEach(function(d) {
+                    var y0 = 0;
+                    d.ages = color.domain().map(function(name) { return {name: name, y0: y0, y1: y0 += +d[name]}; });
+                    d.total = d.ages[d.ages.length - 1].y1;
+                });
+
+                data.sort(function(a, b) { return b.total - a.total; });
+
+                x.domain(data.map(function(d) { return d.Group; }));
+                y.domain([0, d3.max(data, function(d) { return d.total; })]);
+
+                svg.append("g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(0," + height + ")")
+                        .call(xAxis)
+                        .selectAll("text")
+
+                        .style("text-anchor", "end")
+                        .attr("dx", "-.8em")
+                        .attr("dy", ".15em")
+
+                        .attr("transform", function(d) {
+                            return "translate(-5,0) rotate(-90)"
+                        });
+
+
+                svg.append("g")
+                        .attr("class", "y axis")
+                        .call(yAxis)
+
+
+                var state = svg.selectAll(".state")
+                        .data(data)
+                        .enter().append("g")
+                        .attr("class", "g")
+                        .attr("transform", function(d) { return "translate(" + x(d.Group) + ",0)"; });
+
+                state.selectAll("rect")
+                        .data(function(d) { return d.ages; })
+                        .enter().append("rect")
+                        .attr("width", x.rangeBand())
+                        .attr("y", function(d) { return y(d.y1); })
+                        .attr("height", function(d) { return y(d.y0) - y(d.y1); })
+                        .style("fill", function(d) { return color(d.name); });
+
+                var legend = svg.selectAll(".legend")
+                        .data(color.domain().slice().reverse())
+                        .enter().append("g")
+                        .attr("class", "legend")
+                        .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+                legend.append("rect")
+                        .attr("x", width - 18)
+                        .attr("width", 18)
+                        .attr("height", 18)
+                        .style("fill", color);
+
+                legend.append("text")
+                        .attr("x", width - 24)
+                        .attr("y", 9)
+                        .attr("dy", ".35em")
+                        .style("text-anchor", "end")
+                        .text(function(d) { return d; });
+
+            });
+
+        })();
+
+        (function(){
+            var margin = {top: 20, right: 20, bottom: 75, left: 40},
+                    width = 350 - margin.left - margin.right,
+                    height = 300 - margin.top - margin.bottom;
+
+            var x = d3.scale.ordinal()
+                    .rangeRoundBands([0, width], .1);
+
+            var y = d3.scale.linear()
+                    .range([height, 0]);
+
+            var xAxis = d3.svg.axis()
+                    .scale(x)
+                    .orient("bottom");
+
+            var yAxis = d3.svg.axis()
+                    .scale(y)
+                    .orient("left")
+
+
+            var svg = d3.select("#chart1").append("svg")
+                    .attr("width", width + margin.left + margin.right)
+                    .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            d3.json("/api/bar/pa_species/{{ pa.pa_id }}/", function(error, data) {
+                x.domain(data.map(function(d) { return d.name; }));
+                y.domain([0, d3.max(data, function(d) { return d.value; })]);
+
+                svg.append("g")
+                        .attr("class", "x axis")
+                        .attr("transform", "translate(0," + height + ")")
+                        .call(xAxis)
+                        .selectAll("text")
+
+                        .style("text-anchor", "end")
+                        .attr("dx", "-.8em")
+                        .attr("dy", ".15em")
+
+                        .attr("transform", function(d) {
+                            return "translate(-5,0) rotate(-90)"
+                        });;
+
+                svg.append("g")
+                        .attr("class", "y axis")
+                        .call(yAxis)
+
+
+                svg.selectAll(".bar")
+                        .data(data)
+                        .enter().append("rect")
+                        .attr("class", "bar")
+                        .attr("x", function(d) { return x(d.name); })
+                        .attr("width", x.rangeBand())
+                        .attr("y", function(d) { return y(d.value); })
+                        .attr("height", function(d) { return height - y(d.value); });
+
+                svg.selectAll("text.bar")
+                        .data(data)
+                        .enter().append("text")
+                        .attr("class", "bar")
+                        .attr("text-anchor", "middle")
+                        .attr("x", function(d) { return x(d.name)+20; })
+                        .attr("y", function(d) { return y(d.value) - 5; })
+                        .text(function(d) { return d.value; });
+
+            });
+
+            function type(d) {
+                d.value = +d.value;
+                return d;
+            }
+        })();
+
+        {% endif %}
+
+    </script>
+
+    <script type="text/javascript">
+        {% if pa.image %}
         document.getElementById('links').onclick = function (event) {
             event = event || window.event;
             var target = event.target || event.srcElement,
@@ -142,6 +359,7 @@
                     carousel: true
                 }
         );
+        {% endif %}
     </script>
 
     <script type="text/javascript">
@@ -273,6 +491,27 @@
             /*overflow-y:auto;
             max-height:95%;*/
         }
+
+        #chart1, #chart2 {
+            font: 10px sans-serif;
+        }
+
+        .axis path,
+        .axis line {
+            fill: none;
+            stroke: #000;
+            shape-rendering: crispEdges;
+        }
+
+        .bar {
+            fill: steelblue;
+        }
+
+        .x.axis path {
+            display: none;
+        }
+
+
     </style>
 
 {% endblock %}

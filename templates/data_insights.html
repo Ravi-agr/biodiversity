@@ -30,66 +30,54 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#sidebar_species" href="#species_collapseOne">
-                                        Species Hierarchical Diversity
+                                    <a data-toggle="collapse" data-parent="#sidebar_species" href="#species_collapseTwo">
+                                        Taxonomic Classification Tree
                                     </a>
                                 </h4>
                             </div>
-                            <div id="species_collapseOne" class="panel-collapse collapse in">
+                            <div id="species_collapseTwo" class="panel-collapse collapse in">
                                 <div class="panel-body">
-                                    <form class="form-horizontal" role="form" action="#">
-                                        <div class="form-group">
-                                            <div class="col-sm-10">
-                                                <select id="inputPA_ID_sp_one">
-                                                    <option value="0" selected="selected">All</option>
-                                                    {% for item in pa %}
-                                                        <option value="{{ item.pa_id }}">{{ item.name }} {{ item.designation }}</option>
-                                                    {% endfor %}
-                                                </select>
-                                            </div>
-                                        </div>
+                                    The tree alongside shows species taxonomic classification as defined by <a href="http://www.catalogueoflife.org/" target="_blank">Catalouge of Life</a>. The level of tree are as follows (from root to leaves):
+                                    <ul>
+                                        <li>Level 0: All Species (root)</li>
+                                        <li>Level 1: Kingdom</li>
+                                        <li>Level 2: Phylum</li>
+                                        <li>Level 3: Class</li>
+                                        <li>Level 4: Order</li>
+                                        <li>Level 5: Family</li>
+                                        <li>Level 6: Genus</li>
+                                        <li>Level 7: Species (leaf)</li>
+                                    </ul>
+                                    Click on the "blue circle" to view child nodes. You can click on the name of each node to view information of that taxa.
 
-                                        <div class="form-group">
-                                            <div class="col-sm-offset-2 col-sm-10">
-                                                <button type="button" class="btn" id="sp_one_show">Show</button>
-                                            </div>
-                                        </div>
-                                    </form>
                                 </div>
                             </div>
                         </div>
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
-                                    <a data-toggle="collapse" data-parent="#sidebar_species" href="#species_collapseTwo">
-                                        Taxonomic Classification Tree
+                                    <a data-toggle="collapse" data-parent="#sidebar_species" href="#species_collapseOne">
+                                        Species Hierarchical Diversity
                                     </a>
                                 </h4>
                             </div>
-                            <div id="species_collapseTwo" class="panel-collapse collapse">
+                            <div id="species_collapseOne" class="panel-collapse collapse">
                                 <div class="panel-body">
-                                    <div class="panel-body">
-                                        <form class="form-horizontal" role="form" action="#">
-                                            <div class="form-group">
-                                                <div class="col-sm-10">
-                                                    <select id="inputPA_ID_sp_two">
-                                                        <option value="0" selected="selected">All</option>
-                                                        {% for item in pa %}
-                                                            <option value="{{ item.pa_id }}">{{ item.name }} {{ item.designation }}</option>
-                                                        {% endfor %}
-                                                    </select>
-                                                </div>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <div class="col-sm-offset-2 col-sm-10">
-                                                    <button type="button" class="btn" id="sp_two_show">Show</button>
-                                                </div>
-                                            </div>
-                                        </form>
+                                    The sunburst chart alongside shows the partitions of species variety in Nepal. The levels of the chart from innermost circle to outer slices are:
+                                    <ul>
+                                        <li>Level 0: All Species (innermost circle)</li>
+                                        <li>Level 1: Kingdom</li>
+                                        <li>Level 2: Species Type</li>
+                                        <li>Level 3: Class</li>
+                                        <li>Level 4: Order</li>
+                                        <li>Level 5: Family</li>
+                                    </ul>
+                                    
+                                    Click on each partition to zoom in to the chart. Click on innermost circle to return back.
                                 </div>
                             </div>
                         </div>
+
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title">
@@ -128,7 +116,23 @@
                             </div>
                             <div id="species_collapseFive" class="panel-collapse collapse">
                                 <div class="panel-body">
-                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                                    <form class="form-horizontal" role="form" action="#">
+                                        <div class="form-group">
+                                            <label for="inputGroup_sp_five" class="col-sm-5 control-label">Species Type: </label>
+                                            <div class="col-sm-7">
+                                                <select class="form-control" id="inputGroup_sp_five" class="form-control">
+                                                    <option selected="selected">All</option>
+                                                    <option>Mammal</option>
+                                                    <option>Birds</option>
+                                                    <option>Herpeto</option>
+                                                    <option>Fish</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    
+                                    <p>The hierarchical bar chart show different types of habitats of fauna species in Nepal on the basis of <a href="http://www.iucnredlist.org/technical-documents/classification-schemes/habitats-classification-scheme-ver3" target="_blank">IUCN Habitat Classification Scheme</a>.</p>
+                                    <p>Click on the "blue" bar to view lower levels of the hierarchy. To return back, click on the background. </p>
                                 </div>
                             </div>
                         </div>
@@ -160,7 +164,20 @@
                             </div>
                             <div id="threats_collapseOne" class="panel-collapse collapse in">
                                 <div class="panel-body">
-                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                                    <form class="form-horizontal" role="form" action="#">
+                                        <div class="form-group">
+                                            <label for="inputGroup_th_one" class="col-sm-5 control-label">Species Type: </label>
+                                            <div class="col-sm-7">
+                                                <select class="form-control" id="inputGroup_th_one">
+                                                    <option selected="selected">All</option>
+                                                    <option>Mammal</option>
+                                                    <option>Birds</option>
+                                                    <option>Herpeto</option>
+                                                    <option>Fish</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -174,7 +191,21 @@
                             </div>
                             <div id="threats_collapseTwo" class="panel-collapse collapse">
                                 <div class="panel-body">
-                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                                    <form class="form-horizontal" role="form" action="#">
+                                        <div class="form-group">
+                                            <label for="inputGroup_th_two" class="col-sm-5 control-label">Species Type: </label>
+                                            <div class="col-sm-7">
+                                                <select class="form-control" id="inputGroup_th_two">
+                                                    <option selected="selected">All</option>
+                                                    <option>Mammal</option>
+                                                    <option>Birds</option>
+                                                    <option>Herpeto</option>
+                                                    <option>Fish</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -188,7 +219,20 @@
                             </div>
                             <div id="threats_collapseThree" class="panel-collapse collapse">
                                 <div class="panel-body">
-                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                                    <form class="form-horizontal" role="form" action="#">
+                                        <div class="form-group">
+                                            <label for="inputGroup_th_three" class="col-sm-5 control-label">Species Type: </label>
+                                            <div class="col-sm-7">
+                                                <select class="form-control" id="inputGroup_th_three">
+                                                    <option selected="selected">All</option>
+                                                    <option>Mammal</option>
+                                                    <option>Birds</option>
+                                                    <option>Herpeto</option>
+                                                    <option>Fish</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -202,7 +246,22 @@
                             </div>
                             <div id="threats_collapseFour" class="panel-collapse collapse">
                                 <div class="panel-body">
-                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                                    <form class="form-horizontal" role="form" action="#">
+                                        <div class="form-group">
+                                            <label for="inputGroup_th_four" class="col-sm-5 control-label">Species Type: </label>
+                                            <div class="col-sm-7">
+                                                <select class="form-control" id="inputGroup_th_four">
+                                                    <option selected="selected">All</option>
+                                                    <option>Mammal</option>
+                                                    <option>Birds</option>
+                                                    <option>Herpeto</option>
+                                                    <option>Fish</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <p>The hierarchical bar chart shows different types of threats on fauna species in Nepal on the basis of <a href="http://www.iucnredlist.org/technical-documents/classification-schemes/threats-classification-scheme" target="_blank">IUCN Threat Classification Scheme</a>.</p>
+                                    <p>Click on the "blue" bar to view lower levels of the hierarchy. To return back, click on the background. </p>
                                 </div>
                             </div>
                         </div>
@@ -216,7 +275,22 @@
                             </div>
                             <div id="threats_collapseFive" class="panel-collapse collapse">
                                 <div class="panel-body">
-                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                                    <form class="form-horizontal" role="form" action="#">
+                                        <div class="form-group">
+                                            <label for="inputGroup_th_five" class="col-sm-5 control-label">Species Type: </label>
+                                            <div class="col-sm-7">
+                                                <select class="form-control" id="inputGroup_th_five">
+                                                    <option selected="selected">All</option>
+                                                    <option>Mammal</option>
+                                                    <option>Birds</option>
+                                                    <option>Herpeto</option>
+                                                    <option>Fish</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <p>The hierarchical bar chart shows different types of conservation actions need for fauna species in Nepal on the basis of <a href=http://www.iucnredlist.org/technical-documents/classification-schemes/conservation-actions-classification-scheme-ver2" target="_blank">IUCN Conservation Actions Classification Scheme</a>.</p>
+                                    <p>Click on the "blue" bar to view lower levels of the hierarchy. To return back, click on the background. </p>
                                 </div>
                             </div>
                         </div>
@@ -227,7 +301,7 @@
                 <!-- Article main content -->
                 <article class="col-md-8 maincontent">
                     <header class="page-header">
-                        <h1 class="page-title">Threats</h1>
+                        <div id="th_body"></div>
                     </header>
                 </article>
                 <!-- /Article -->
@@ -247,7 +321,17 @@
                             </div>
                             <div id="pa_collapseOne" class="panel-collapse collapse in">
                                 <div class="panel-body">
-                                    <button class="btn btn-primary" id="pa_one_show">Show</button>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="area" value="line" checked> Area coverage Time Series (1973-2010)
+                                        </label>
+                                    </div>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="area" value="pie"> Present Area coverage partition<br/>
+                                        </label>
+                                    </div>
+                                    <br/>
                                 </div>
                             </div>
                         </div>
@@ -300,26 +384,245 @@
 {% block additionalScripts %}
     <script type="text/javascript" src="{% static "select2/select2.min.js" %}"></script>
     <script src="{% static "js/d3.v3.min.js" %}"></script>
+
+    <script src="{% static "js/3DPie.js" %}"></script>
+
     <script type="text/javascript">
-        $("#inputPA_ID_sp_one").select2();
-        //$("#inputPA_ID_sp_two").select2();
-
-        $("#sp_one_show").click(function(){
-            var id = $("#inputPA_ID_sp_one").val();
-            $("#species_body").html("Loading...").load("/data_insights/species/variety/"+id+"/");
-        });
-        $("#sp_two_show").click(function(){
-            var id = $("#inputPA_ID_sp_two").val();
-            alert("two");
-            $("#species_body").html("Loading...").load("/data_insights/species/tree/"+id+"/");
+        $(document).ready(function(){
+            $("#species_body").html("Loading...").load("/data_insights/species/tree/");
+            iucn_redlist();
+            area_chart();
 
         });
-        $("#pa_one_show").click(function(){
-            $("#pa_body").html("Loading...").load("/data_insights/protected_areas/area/");
+
+        $('#species_collapseOne').on('show.bs.collapse', function () {
+            $("#species_body").html("Loading...").load("/data_insights/species/variety/");
         });
+
+        $('#species_collapseTwo').on('show.bs.collapse', function () {
+            $("#species_body").html("Loading...").load("/data_insights/species/tree/");
+        });
+
+
+        $('#species_collapseFive').on('show.bs.collapse', function () {
+            var group = $("#inputGroup_sp_five").val();
+            $("#species_body").html("Loading...").load("/data_insights/iucn/habitat/"+group+"/");
+
+        });
+
+        $("#inputGroup_sp_five").on('change', function(){
+            var group = $("#inputGroup_sp_five").val();
+            $("#species_body").html("Loading...").load("/data_insights/iucn/habitat/"+group+"/");
+
+        });
+
+        function iucn_redlist() {
+            var group = $("#inputGroup_th_one").val();
+
+            var myData1, myData2;
+            $.ajax({
+                url: "/api/pie/redlist/"+group+"/",
+                async: false,
+                dataType: 'json',
+                success: function(data) {
+                    myData1 = data;
+                }
+            });
+
+            $.ajax({
+                url: "/api/pie/redlist_th/"+group+"/",
+                async: false,
+                dataType: 'json',
+                success: function(data) {
+                    myData2 = data;
+                }
+            });
+
+            var color = d3.scale.category20();
+
+            if($("#th_body").html().indexOf('pie_redlist') > -1) {
+                Donut3D.transition("iucn_all", getData1(), 150, 120, 30, 0.4);
+                Donut3D.transition("iucn_th", getData2(), 150, 120, 30, 0.4);
+            }           else {
+                $("#th_body").html("<div class='col-md-6' align='center'><h3 class='page-title'>IUCN Red List Status<br/>(All Species)</h3></div><div class='col-md-6' align='center'><h3 class='page-title'>IUCN Red List Status<br/>(Threatened Species)</h3></div><div id = 'pie_redlist'></div>");
+
+                var svg = d3.select("#pie_redlist").append("svg").attr("width",800).attr("height",300);
+
+                svg.append("g").attr("id","iucn_all")
+
+                svg.append("g").attr("id","iucn_th");
+
+                Donut3D.draw("iucn_all", getData1(), 175, 150, 150, 120, 30, 0.4);
+                Donut3D.draw("iucn_th", getData2(), 550, 150, 150, 120, 30, 0.4);
+
+            }
+            function getData1(){
+                return myData1.map(function(d){
+                    return {label:d.label, value:d.value, color:color(d.label)};});
+            }
+            function getData2(){
+                return myData2.map(function(d){
+                    return {label:d.label, value:d.value, color:color(d.label)};});
+            }
+        }
+
+        function cites() {
+            var group = $("#inputGroup_th_two").val();
+
+            var myData;
+            $.ajax({
+                url: "/api/pie/cites/"+group+"/",
+                async: false,
+                dataType: 'json',
+                success: function(data) {
+                    myData = data;
+                }
+            });
+
+            var color = d3.scale.category20();
+
+            if($("#th_body").html().indexOf('pie_cites') > -1) {
+                Donut3D.transition("cites", getData(), 250, 175, 40, 0.4);
+
+            }
+            else {
+                $("#th_body").html("<h3 class='page-title'>Species Listed Under CITES Appendices</h3><div id='pie_cites'></div>");
+                var svg = d3.select("#pie_cites").append("svg").attr("width",800).attr("height",600);
+                svg.append("g").attr("id","cites")
+                Donut3D.draw("cites", getData(), 400, 200, 250, 175, 40, 0.4);
+            }
+
+            function getData(){
+                return myData.map(function(d){
+                    return {label:d.label, value:d.value, color:color(d.label)};});
+            }
+        }
+
+        function nrdb() {
+            var group = $("#inputGroup_th_three").val();
+
+            var myData;
+            $.ajax({
+                url: "/api/pie/nrdb/"+group+"/",
+                async: false,
+                dataType: 'json',
+                success: function(data) {
+                    myData = data;
+                }
+            });
+
+            var color = d3.scale.category20();
+
+            if($("#th_body").html().indexOf('pie_nrdb') > -1) {
+                Donut3D.transition("nrdb", getData(), 250, 175, 40, 0.4);
+
+            }
+            else {
+                $("#th_body").html("<h3 class='page-title'>Nepal Redlist Database Status</h3><div id='pie_nrdb'></div>");
+                var svg = d3.select("#pie_nrdb").append("svg").attr("width",800).attr("height",600);
+                svg.append("g").attr("id","nrdb")
+                Donut3D.draw("nrdb", getData(), 400, 200, 250, 175, 40, 0.4);
+            }
+
+            function getData(){
+                return myData.map(function(d){
+                    return {label:d.label, value:d.value, color:color(d.label)};});
+            }
+        }
+
+        $("#threats_collapseOne").on('show.bs.collapse', function () {
+                iucn_redlist();
+        });
+
+        $("#inputGroup_th_one").on('change', function () {
+                iucn_redlist();
+        });
+
+        $("#threats_collapseTwo").on('show.bs.collapse', function () {
+            cites();
+        });
+
+        $("#inputGroup_th_two").on('change', function () {
+            cites();
+        });
+
+        $("#threats_collapseThree").on('show.bs.collapse', function () {
+            nrdb();
+        });
+
+        $("#inputGroup_th_three").on('change', function () {
+            nrdb();
+        });
+
+        $("#threats_collapseFour").on('show.bs.collapse', function () {
+            var group = $("#inputGroup_th_four").val();
+            $("#th_body").html("Loading...").load("/data_insights/iucn/threat/"+group+"/");
+        });
+
+        $("#inputGroup_th_four").on('change', function () {
+            var group = $("#inputGroup_th_four").val();
+            $("#th_body").html("Loading...").load("/data_insights/iucn/threat/"+group+"/");
+        });
+
+        $("#threats_collapseFive").on('show.bs.collapse', function () {
+            var group = $("#inputGroup_th_five").val();
+            $("#th_body").html("Loading...").load("/data_insights/iucn/conservation/"+group+"/");
+        });
+
+        $("#inputGroup_th_five").on('change', function () {
+            var group = $("#inputGroup_th_five").val();
+            $("#th_body").html("Loading...").load("/data_insights/iucn/conservation/"+group+"/");
+        });
+
+        function area_chart() {
+            var choice = $("input:radio[name=area]:checked").val()
+            if(choice == "pie")
+                $("#pa_body").html("Loading...").load("/data_insights/protected_areas/area/pie/");
+            else
+                $("#pa_body").html("Loading...").load("/data_insights/protected_areas/area/line/");
+        }
+
+        $("#pa_collapseFive").on('show.bs.collapse', function () {
+            area_chart();
+        });
+
+        $("input:radio[name=area]").on('change', function () {
+            area_chart();
+        });
+
+
+
     </script>
 {% endblock %}
 
 {% block additionalCSS %}
     <link rel="stylesheet"  href="{% static "select2/select2.css" %}">
+    <style type="text/css">
+        #pie_redlist, #pie_cites {
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+            position: relative;
+        }
+        path.slice{
+            stroke-width:2px;
+        }
+        polyline{
+            opacity: .3;
+            stroke: black;
+            stroke-width: 2px;
+            fill: none;
+        }
+        #pie_redlist svg text.percent{
+            fill:black;
+            text-anchor:middle;
+            font-size:10px;
+        }
+        #pie_cites svg text.percent{
+            fill:black;
+            text-anchor:middle;
+            font-size:14px;
+        }
+
+
+    </style>
 {% endblock %}

@@ -50,7 +50,7 @@
 <script>
 
 // Get JSON data
-treeJSON = d3.json("/api/classification/{{ pa_id }}/", function(error, treeData) {
+treeJSON = d3.json("/api/classification/", function(error, treeData) {
 
     // Calculate total nodes, max label length
     var totalNodes = 0;
@@ -457,7 +457,7 @@ treeJSON = d3.json("/api/classification/{{ pa_id }}/", function(error, treeData)
 
         nodeEnter
                 .append("a")
-                .attr("xlink:href", function (d) { return "/taxa/" + d.type + "/" + d.name + "/"; })
+                .attr("xlink:href", function (d) { return d.type == "species"?"/species/"+d.id+"/"+d.name.replace(" ","-")+"/":"/taxa/" + d.type + "/" + d.name + "/"; })
                 .append("rect")
                 .attr("class", "clickable")
                 .attr("y", -6)
@@ -593,5 +593,10 @@ treeJSON = d3.json("/api/classification/{{ pa_id }}/", function(error, treeData)
     // Layout the tree initially and center on the root node.
     update(root);
     centerNode(root);
+
+
+
+
+
 });
 </script>
