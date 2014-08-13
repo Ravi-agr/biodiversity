@@ -23,19 +23,19 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="api_views.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/biodiv/views/api_views.py">
+      <file leaf-file-name="search_results_page.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/search_results_page.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="343" column="0" selection-start="13656" selection-end="13656" vertical-scroll-proportion="0.0">
+            <state line="160" column="26" selection-start="7035" selection-end="7035" vertical-scroll-proportion="-0.65384614">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="renderTemplates.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/biodiv/views/renderTemplates.py">
+      <file leaf-file-name="search_results.html" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/templates/search_results.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="286" column="20" selection-start="8965" selection-end="8965" vertical-scroll-proportion="0.0">
+            <state line="20" column="18" selection-start="808" selection-end="808" vertical-scroll-proportion="-8.807693">
               <folding />
             </state>
           </provider>
@@ -44,8 +44,28 @@
       <file leaf-file-name="protected_areas_list.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/protected_areas_list.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="205" column="36" selection-start="6592" selection-end="6592" vertical-scroll-proportion="-3.9230769">
+            <state line="208" column="0" selection-start="6992" selection-end="6992" vertical-scroll-proportion="-0.88461536">
               <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="settings.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/biodiversity/settings.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="51" column="44" selection-start="1461" selection-end="1461" vertical-scroll-proportion="0.5093946">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="api_views.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/biodiv/views/api_views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="709" column="0" selection-start="27956" selection-end="27956" vertical-scroll-proportion="-9.8">
+              <folding>
+                <element signature="e#0#58#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -53,35 +73,28 @@
       <file leaf-file-name="data_insights.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/data_insights.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="242" column="67" selection-start="15207" selection-end="15207" vertical-scroll-proportion="-10.307693">
+            <state line="426" column="46" selection-start="27274" selection-end="27274" vertical-scroll-proportion="-3.627451">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="taxonomy_tree.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/analytics/taxonomy_tree.html">
+      <file leaf-file-name="renderTemplates.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/biodiv/views/renderTemplates.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="459" column="120" selection-start="15917" selection-end="15917" vertical-scroll-proportion="-6.423077">
+            <state line="20" column="5" selection-start="451" selection-end="451" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="line.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/analytics/line.html">
+      <file leaf-file-name="models.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/biodiv/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="140" column="67" selection-start="5151" selection-end="5151" vertical-scroll-proportion="-7.0384617">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="hierarchical_bar.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/analytics/hierarchical_bar.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="81" column="40" selection-start="2029" selection-end="2029" vertical-scroll-proportion="-27.0">
-              <folding />
+            <state line="426" column="10" selection-start="20349" selection-end="20349" vertical-scroll-proportion="-6.4">
+              <folding>
+                <element signature="e#0#39#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -89,25 +102,16 @@
       <file leaf-file-name="urls.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/biodiversity/urls.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="50" column="40" selection-start="1815" selection-end="1815" vertical-scroll-proportion="-15.16">
+            <state line="18" column="0" selection-start="473" selection-end="473" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="sunburst.html" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="sunburst.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/analytics/sunburst.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="9" column="9" selection-start="282" selection-end="282" vertical-scroll-proportion="0.30538923">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="renderInsights.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/biodiv/views/renderInsights.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="8" column="42" selection-start="318" selection-end="318" vertical-scroll-proportion="0.0">
+            <state line="24" column="16" selection-start="507" selection-end="507" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -128,30 +132,29 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/biodiv/models.py" />
-        <option value="$PROJECT_DIR$/templates/species.html" />
-        <option value="$PROJECT_DIR$/biodiv/views/renderTemplates.py" />
-        <option value="$PROJECT_DIR$/templates/protected_areas_list.html" />
-        <option value="$PROJECT_DIR$/templates/protected_area.html" />
-        <option value="$PROJECT_DIR$/templates/analytics/pie.html" />
-        <option value="$PROJECT_DIR$/templates/base/base.html" />
-        <option value="$PROJECT_DIR$/templates/analytics/taxonomy_tree.html" />
-        <option value="$PROJECT_DIR$/templates/index.html" />
-        <option value="$PROJECT_DIR$/templates/analytics/line.html" />
         <option value="$PROJECT_DIR$/biodiv/views/renderInsights.py" />
+        <option value="$PROJECT_DIR$/templates/analytics/comparison.html" />
+        <option value="$PROJECT_DIR$/templates/protected_area.html" />
+        <option value="$PROJECT_DIR$/templates/protected_areas_list.html" />
+        <option value="E:/Sawal files/word/word.py" />
+        <option value="$PROJECT_DIR$/templates/index.html" />
+        <option value="$PROJECT_DIR$/templates/base/base.html" />
+        <option value="$PROJECT_DIR$/templates/base/base-sidebar-right.html" />
         <option value="$PROJECT_DIR$/biodiversity/urls.py" />
-        <option value="$PROJECT_DIR$/templates/analytics/hierarchical_bar.html" />
+        <option value="$PROJECT_DIR$/biodiv/views/renderTemplates.py" />
+        <option value="$PROJECT_DIR$/templates/search_results_page.html" />
+        <option value="$PROJECT_DIR$/templates/search_results.html" />
+        <option value="$PROJECT_DIR$/biodiv/models.py" />
         <option value="$PROJECT_DIR$/templates/data_insights.html" />
         <option value="$PROJECT_DIR$/biodiv/views/api_views.py" />
-        <option value="$PROJECT_DIR$/templates/analytics/sunburst.html" />
+        <option value="$PROJECT_DIR$/biodiversity/settings.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1382" />
-    <option name="height" value="744" />
+    <option name="x" value="683" />
+    <option name="width" value="683" />
+    <option name="height" value="728" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -179,6 +182,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -313,18 +317,17 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="options.lastSelected" value="com.jetbrains.python.templateLanguages.TemplateLanguageModulesConfigurable" />
     <property name="recentsLimit" value="5" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../biodiversit/biodiv/views" />
+    <property name="options.lastSelected" value="com.jetbrains.python.templateLanguages.TemplateLanguageModulesConfigurable" />
+    <property name="last_opened_file_path" value="E:/Sawal files/word" />
     <property name="DefaultHtmlFileTemplate" value="Html" />
-    <property name="options.searchVisible" value="true" />
     <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
   </component>
   <component name="PyConsoleOptionsProvider">
     <option name="myPythonConsoleState">
@@ -374,6 +377,25 @@
       <option name="MULTIPROCESS" value="false" />
       <method />
     </configuration>
+    <configuration default="true" type="tests" factoryName="Unittests">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <module name="biodiversity" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="FOLDER_NAME" value="" />
+      <option name="TEST_TYPE" value="TEST_SCRIPT" />
+      <option name="PATTERN" value="" />
+      <option name="USE_PATTERN" value="false" />
+      <option name="PUREUNITTEST" value="true" />
+      <method />
+    </configuration>
     <configuration default="true" type="Python.DjangoServer" factoryName="Django server">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -393,25 +415,6 @@
       <option name="useCustomRunCommand" value="false" />
       <option name="customRunCommand" value="" />
       <option name="launchJavascriptDebuger" value="false" />
-      <method />
-    </configuration>
-    <configuration default="true" type="tests" factoryName="Unittests">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <module name="biodiversity" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <option name="PUREUNITTEST" value="true" />
       <method />
     </configuration>
     <configuration default="true" type="tests" factoryName="Doctests">
@@ -486,9 +489,9 @@
       <method />
     </configuration>
     <list size="3">
-      <item index="0" class="java.lang.String" itemvalue="Django server.biodiversity" />
-      <item index="1" class="java.lang.String" itemvalue="Django server.Unnamed" />
-      <item index="2" class="java.lang.String" itemvalue="Python.api_views" />
+      <item index="0" class="java.lang.String" itemvalue="Python.api_views" />
+      <item index="1" class="java.lang.String" itemvalue="Django server.biodiversity" />
+      <item index="2" class="java.lang.String" itemvalue="Django server.Unnamed" />
     </list>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
@@ -519,25 +522,25 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="false" />
+    <frame x="683" y="0" width="683" height="728" extended-state="1" />
+    <editor active="true" />
     <layout>
       <window_info id="Data Sources" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.31562975" sideWeight="0.6564103" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23515981" sideWeight="0.23589744" order="1" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4345719" sideWeight="0.6379613" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23515981" sideWeight="0.23589744" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34358975" sideWeight="0.49772382" order="10" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34358975" sideWeight="0.4969651" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.36203867" sideWeight="0.4969651" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32991454" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -600,106 +603,102 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://C:/Python27/Lib/site-packages/django/core/handlers/wsgi.py">
+    <entry file="file://$PROJECT_DIR$/templates/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="214" column="0" selection-start="7646" selection-end="7646" vertical-scroll-proportion="0.0" />
+        <state line="16" column="24" selection-start="695" selection-end="799" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://C:/Python27/Lib/site-packages/django/core/handlers/base.py">
+    <entry file="file://$PROJECT_DIR$/templates/base/base-sidebar-right.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="113" column="0" selection-start="4537" selection-end="4537" vertical-scroll-proportion="0.30057803" />
+        <state line="19" column="43" selection-start="574" selection-end="574" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/species.html">
+    <entry file="file://$PROJECT_DIR$/templates/species_list.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/biodiv/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="410" column="4" selection-start="19442" selection-end="19442" vertical-scroll-proportion="0.0" />
+        <state line="19" column="14" selection-start="119" selection-end="908" vertical-scroll-proportion="0.7733333" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/base/base.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="51" column="25" selection-start="2193" selection-end="2193" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="51" column="25" selection-start="2193" selection-end="2193" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/index.html">
+    <entry file="file://C:/Python27/Lib/site-packages/django/core/handlers/base.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="431" selection-start="2468" selection-end="2547" vertical-scroll-proportion="0.38666666">
-          <folding />
-        </state>
+        <state line="113" column="0" selection-start="4537" selection-end="4537" vertical-scroll-proportion="0.33105803" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/analytics/line.html">
+    <entry file="file://$PROJECT_DIR$/templates/protected_area.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="140" column="67" selection-start="5151" selection-end="5151" vertical-scroll-proportion="-7.0384617">
-          <folding />
-        </state>
+        <state line="118" column="30" selection-start="4529" selection-end="4529" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/biodiv/views/renderTemplates.py">
+    <entry file="file://$PROJECT_DIR$/templates/analytics/sunburst.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="286" column="20" selection-start="8965" selection-end="8965" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/protected_areas_list.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="205" column="36" selection-start="6592" selection-end="6592" vertical-scroll-proportion="-3.9230769">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/biodiv/views/renderInsights.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="42" selection-start="318" selection-end="318" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
+        <state line="24" column="16" selection-start="507" selection-end="507" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/biodiversity/urls.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="50" column="40" selection-start="1815" selection-end="1815" vertical-scroll-proportion="-15.16">
+        <state line="18" column="0" selection-start="473" selection-end="473" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/biodiv/views/renderTemplates.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="5" selection-start="451" selection-end="451" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/analytics/hierarchical_bar.html">
+    <entry file="file://$PROJECT_DIR$/biodiv/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="81" column="40" selection-start="2029" selection-end="2029" vertical-scroll-proportion="-27.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/templates/analytics/taxonomy_tree.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="459" column="120" selection-start="15917" selection-end="15917" vertical-scroll-proportion="-6.423077">
-          <folding />
+        <state line="426" column="10" selection-start="20349" selection-end="20349" vertical-scroll-proportion="-6.4">
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/templates/data_insights.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="242" column="67" selection-start="15207" selection-end="15207" vertical-scroll-proportion="-10.307693">
+        <state line="426" column="46" selection-start="27274" selection-end="27274" vertical-scroll-proportion="-3.627451">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/search_results.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="20" column="18" selection-start="808" selection-end="808" vertical-scroll-proportion="-8.807693">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/search_results_page.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="160" column="26" selection-start="7035" selection-end="7035" vertical-scroll-proportion="-0.65384614">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/biodiv/views/api_views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="343" column="0" selection-start="13656" selection-end="13656" vertical-scroll-proportion="0.0">
+        <state line="709" column="0" selection-start="27956" selection-end="27956" vertical-scroll-proportion="-9.8">
+          <folding>
+            <element signature="e#0#58#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/templates/protected_areas_list.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="208" column="0" selection-start="6992" selection-end="6992" vertical-scroll-proportion="-0.88461536">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/analytics/sunburst.html">
+    <entry file="file://$PROJECT_DIR$/biodiversity/settings.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="9" column="9" selection-start="282" selection-end="282" vertical-scroll-proportion="0.30538923">
+        <state line="51" column="44" selection-start="1461" selection-end="1461" vertical-scroll-proportion="0.5093946">
           <folding />
         </state>
       </provider>

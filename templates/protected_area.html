@@ -44,21 +44,23 @@
             <div class="panel-heading">
                 <b class="panel-title">Species in {{ pa.name }} {{ pa.designation }}</b>
             </div>
-
+            <a href="#" data-toggle="modal" data-target="#myModal" onclick="chart1('.modal-body',500,450);$('.modal-title').html('Species in {{ pa.name }} {{ pa.designation }}')" style="text-decoration: none;">
             <div id="chart1" align="center">
 
 
             </div>
+            </a>
         </div>
         <div class="panel panel-info">
             <div class="panel-heading">
                 <b class="panel-title">Threatened and Near threatened species in {{ pa.name }} {{ pa.designation }}</b>
             </div>
-
+            <a href="#" data-toggle="modal" data-target="#myModal" onclick="chart2('.modal-body',500,450); $('.modal-title').html('Threatened and Near threatened species in {{ pa.name }} {{ pa.designation }}');" style="text-decoration: none;">
             <div id="chart2" align="center">
 
 
             </div>
+            </a>
         </div>
     {% endif %}
 {% endblock %}
@@ -143,7 +145,7 @@
                         <h4 class="modal-title">Modal title</h4>
 
                     </div>
-                    <div class="modal-body"></div>
+                    <div class="modal-body" align="center"></div>
 
                 </div>
                 <!-- /.modal-content -->
@@ -161,10 +163,13 @@
     <script src="{% static "js/d3.v3.min.js" %}"></script>
     <script type="text/javascript">
         {% if pa.species %}
-        (function(){
-            var margin = {top: 20, right: 20, bottom: 50, left: 40},
-                    width = 350 - margin.left - margin.right,
-                    height = 300 - margin.top - margin.bottom;
+        chart1("#chart1", 350, 300);
+        chart2("#chart2", 350, 300);
+
+        function chart2(parent, wdt, hgt){
+            var margin = {top: 20, right: 20, bottom: wdt <= 400 ? 50:75, left: 40},
+                    width = wdt - margin.left - margin.right,
+                    height = hgt - margin.top - margin.bottom;
 
             var x = d3.scale.ordinal()
                     .rangeRoundBands([0, width], .1);
@@ -184,7 +189,10 @@
                     .orient("left")
                     .tickFormat(d3.format(".2s"));
 
-            var svg = d3.select("#chart2").append("svg")
+            $(".modal-body").html("");
+
+            var svg = d3.select(parent).append("svg")
+                    .attr("id",parent+"_chart2")
                     .attr("width", width + margin.left + margin.right)
                     .attr("height", height + margin.top + margin.bottom)
                     .append("g")
@@ -260,12 +268,13 @@
 
             });
 
-        })();
+        };
 
-        (function(){
-            var margin = {top: 20, right: 20, bottom: 75, left: 40},
-                    width = 350 - margin.left - margin.right,
-                    height = 300 - margin.top - margin.bottom;
+        function chart1(parent, wdt, hgt){
+
+            var margin = {top: 20, right: 20, bottom: wdt <= 400 ? 75:100, left: 40},
+                    width = wdt - margin.left - margin.right,
+                    height = hgt - margin.top - margin.bottom;
 
             var x = d3.scale.ordinal()
                     .rangeRoundBands([0, width], .1);
@@ -281,8 +290,9 @@
                     .scale(y)
                     .orient("left")
 
-
-            var svg = d3.select("#chart1").append("svg")
+            $(".modal-body").html("");
+            var svg = d3.select(parent).append("svg")
+                    .attr("id",parent+"_chart1")
                     .attr("width", width + margin.left + margin.right)
                     .attr("height", height + margin.top + margin.bottom)
                     .append("g")
@@ -335,7 +345,7 @@
                 d.value = +d.value;
                 return d;
             }
-        })();
+        };
 
         {% endif %}
 
@@ -365,7 +375,7 @@
     <script type="text/javascript">
         function loadModal(id,type){
             $(".modal-title").html(type);
-            $(".modal-body").load("/species_list/"+id+"/"+type+"/");
+            $(".modal-body").html("Loading...").load("/species_list/"+id+"/"+type+"/");
         }
     </script>
 

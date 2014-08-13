@@ -415,3 +415,15 @@ class Status(models.Model):
         db_table = 'Status'
 
 
+class Zoo(models.Model):
+    id = models.IntegerField(db_column='Id', primary_key=True)
+    common_name = models.CharField(db_column='Common Name', max_length=100, blank=True)
+    name = models.CharField(db_column='Scientific Name', max_length=100, blank=True)
+    iucn = models.CharField(db_column='IUCN Status', max_length=10, blank=True)
+    protected = models.CharField(db_column='Protected', max_length=20, blank=True)
+    origin = models.CharField(db_column='Origin', max_length=20, blank=True)
+    male = models.IntegerField(db_column='Male',blank=True)
+    female = models.IntegerField(db_column='Female',blank=True)
+    unknown = models.IntegerField(db_column='Unknown',blank=True)
+    group = models.CharField(db_column="Group",max_length=20, blank=True)
+    species_id = models.ForeignKey(Species, db_column='Species ID')

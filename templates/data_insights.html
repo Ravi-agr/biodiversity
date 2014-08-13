@@ -1,5 +1,6 @@
 {% extends "base/base.html" %}
 {% load staticfiles %}
+{% load filters %}
 {% block pageTitle %}Data Insights{% endblock %}
 {% block bodyContents %}
     <header id="head" class="secondary"></header>
@@ -145,7 +146,7 @@
                     {% comment %}<header class="page-header">
                         <h3 class="page-title">Species</h1>
                     </header>{% endcomment %}
-                    <div id="species_body"></div>
+                    <div id="species_body" style="min-height: 600px;"></div>
                 </article>
                 <!-- /Article -->
 
@@ -301,7 +302,7 @@
                 <!-- Article main content -->
                 <article class="col-md-8 maincontent">
                     <header class="page-header">
-                        <div id="th_body"></div>
+                        <div id="th_body"  style="min-height: 600px;"></div>
                     </header>
                 </article>
                 <!-- /Article -->
@@ -345,7 +346,28 @@
                             </div>
                             <div id="pa_collapseTwo" class="panel-collapse collapse">
                                 <div class="panel-body">
-                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                                    <form class="form-horizontal" role="form" action="#">
+                                        <div class="form-group">
+                                            <label for="pa1" class="col-sm-3 control-label">Area I: </label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control" id="pa1">
+                                                    {% for item in pa %}
+                                                        <option value="{{ item.pa_id }}" {% if forloop.first %}selected{% endif %}>{{ item.name }} {{ item.designation|initials }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="pa2" class="col-sm-3 control-label">Area II: </label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control" id="pa2">
+                                                    {% for item in pa %}
+                                                        <option value="{{ item.pa_id }}" {% if forloop.counter == 2%}selected{% endif %}>{{ item.name }} {{ item.designation|initials }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -359,7 +381,51 @@
                             </div>
                             <div id="pa_collapseThree" class="panel-collapse collapse">
                                 <div class="panel-body">
-                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                                    <div class="col-sm-12">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="zoo" value="pie" checked> Species Types
+                                        </label>
+                                    </div>
+                                    </div>
+                                    <div class="col-sm-2"></div>
+                                    <div class="col-sm-10">
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="pie_choice" value="species" checked> By Species
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="pie_choice" value="count"> By Number
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="zoo" value="number"> Species Number
+                                        </label>
+                                    </div>
+                                    </div>
+                                    <div class="col-sm-2"></div>
+                                    <div class="col-sm-10">
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="stack_choice" value="gender" checked> By Gender
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="stack_choice" value="iucn"> By IUCN Status
+                                            </label>
+                                        </div>
+                                        <div class="radio">
+                                            <label>
+                                                <input type="radio" name="stack_choice" value="origin"> By Origin
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -370,7 +436,7 @@
                 <!-- Article main content -->
                 <article class="col-md-8 maincontent">
                     <header class="page-header">
-                        <div id="pa_body"></div>
+                        <div id="pa_body" style="min-height: 600px;"></div>
                     </header>
                 </article>
                 <!-- /Article -->
@@ -384,7 +450,8 @@
 {% block additionalScripts %}
     <script type="text/javascript" src="{% static "select2/select2.min.js" %}"></script>
     <script src="{% static "js/d3.v3.min.js" %}"></script>
-
+    <script src="{% static "js/leaflet.js" %}"></script>
+    <script src="{% static "js/iba.geojson" %}"></script>
     <script src="{% static "js/3DPie.js" %}"></script>
 
     <script type="text/javascript">
@@ -403,6 +470,129 @@
             $("#species_body").html("Loading...").load("/data_insights/species/tree/");
         });
 
+        function iba_nepal(){
+            var geojson;
+
+            var map = L.map('map').setView([28.2639, 83.9722], 7);
+            L.tileLayer('http://{s}.tiles.mapbox.com/v3/smaske.i83ipmj1/{z}/{x}/{y}.png', {
+                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+                maxZoom: 18
+            }).addTo(map);
+
+            function getColor(d) {
+
+                return d == "Whole" ? '#008A2E' :'#00C800';
+            }
+
+            function style(feature) {
+                return {
+                    fillColor: getColor(feature.properties.Protect),
+                    weight: 1,
+                    opacity: 1,
+                    color: 'white',
+                    dashArray: '3',
+                    fillOpacity: 0.7
+                };
+            }
+
+
+            var info = L.control({position: 'topright'});
+
+            info.onAdd = function (map) {
+                this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+                this.update();
+                return this._div;
+            };
+
+            // method that we will use to update the control based on feature properties passed
+            info.update = function (props) {
+                this._div.innerHTML = props ?
+                        '<h4>'+props.NatName+'</h4>'+ '<br />' + '<b>Area: ' + '</b>' + props.SitArea + ' sq. km.' + '<br />'
+                        : '<h4>Important Bird Areas</h4> Hover over an IBA';
+            };
+
+            info.addTo(map);
+
+            function highlightFeature(e) {
+                var layer = e.target;
+
+                layer.setStyle({
+                    weight: 2,
+                    color: '#666',
+                    dashArray: '',
+                    fillOpacity: 0.7
+                });
+
+
+
+                info.update(layer.feature.properties);
+            }
+
+            function resetHighlight(e) {
+                var layer = e.target;
+                geojson.resetStyle(e.target);
+                info.update();
+            }
+
+            function zoomToFeature(e) {
+                map.fitBounds(e.target.getBounds());
+            }
+
+            function onEachFeature(feature, layer) {
+                layer.on({
+                    mouseover: highlightFeature,
+                    mouseout: resetHighlight,
+                    click: zoomToFeature
+                });
+
+                if(feature.properties.SitArea <= 5000) {
+
+                    var marker = L.marker(getCenter(feature)).addTo(map);
+                }
+            }
+
+
+            geojson = L.geoJson(shapes, {
+                style: style,
+                onEachFeature: onEachFeature
+            }).addTo(map);
+
+            var legend = L.control({position: 'bottomleft'});
+
+            legend.onAdd = function (map) {
+
+                var div = L.DomUtil.create('div', 'info legend'),
+                        grades = ["Whole", "Little/None"],
+                        labels = [];
+
+                // loop through our density intervals and generate a label with a colored square for each interval
+                for (var i = 0; i < grades.length; i++) {
+                    div.innerHTML += '<i style="background:' + getColor(grades[i]) + '"></i> '+ grades[i] + '<br/>';
+                }
+
+                return div;
+            };
+
+            function getCenter(feature) {
+                var coord = feature.geometry.coordinates[0];
+                var sumx = 0; var sumy = 0; var n = 0;
+                for (var i =0; i<coord.length; i++) {
+                    sumx += coord[i][0];
+                    sumy += coord[i][1];
+                    n++;
+                }
+                var arr = [sumy/n,sumx/n];
+
+                return arr;
+            }
+
+            legend.addTo(map);
+        };
+
+        $("#species_collapseFour").on('show.bs.collapse', function () {
+            $("#species_body").html("Loading...").html("<h3 class='page-title'>Important Bird Areas (IBAs) of Nepal</h3><div id='map'></div>");
+            iba_nepal();
+        });
 
         $('#species_collapseFive').on('show.bs.collapse', function () {
             var group = $("#inputGroup_sp_five").val();
@@ -445,7 +635,7 @@
                 Donut3D.transition("iucn_th", getData2(), 150, 120, 30, 0.4);
             }           else {
                 $("#th_body").html("<div class='col-md-6' align='center'><h3 class='page-title'>IUCN Red List Status<br/>(All Species)</h3></div><div class='col-md-6' align='center'><h3 class='page-title'>IUCN Red List Status<br/>(Threatened Species)</h3></div><div id = 'pie_redlist'></div>");
-
+                $("#th_body").append("<div align='center'><img src = '{% static "images/iucn/threat-categories.gif" %}'></div>");
                 var svg = d3.select("#pie_redlist").append("svg").attr("width",800).attr("height",300);
 
                 svg.append("g").attr("id","iucn_all")
@@ -519,7 +709,8 @@
             }
             else {
                 $("#th_body").html("<h3 class='page-title'>Nepal Redlist Database Status</h3><div id='pie_nrdb'></div>");
-                var svg = d3.select("#pie_nrdb").append("svg").attr("width",800).attr("height",600);
+                $("#th_body").append("<p><b>NRDB Status Categories:</b> EXN - Extinct in Nepal, C - Critically Endangered, E - Endangered, V - Vulnerable, S - Susceptible, UR - Under Record</p>")
+                var svg = d3.select("#pie_nrdb").append("svg").attr("width",800).attr("height",420);
                 svg.append("g").attr("id","nrdb")
                 Donut3D.draw("nrdb", getData(), 400, 200, 250, 175, 40, 0.4);
             }
@@ -529,6 +720,53 @@
                     return {label:d.label, value:d.value, color:color(d.label)};});
             }
         }
+
+        function zoo_pie() {
+            var choice = $("input:radio[name=pie_choice]:checked").val();
+
+
+            var myData;
+            $.ajax({
+                url: "/api/pie/zoo_"+choice+"/",
+                async: false,
+                dataType: 'json',
+                success: function(data) {
+                    myData = data;
+                }
+            });
+
+            var color = d3.scale.category20();
+            var title = choice == "species"?"Species":"Number";
+
+            if($("#pa_body").html().indexOf('pie_zoo') > -1) {
+                Donut3D.transition("zoo", getData(), 250, 175, 40, 0.4);
+                $("#pieTitle").html("Species Types in Central Zoo by "+title);
+            }
+            else {
+
+                $("#pa_body").html("<h3 class='page-title' id='pieTitle'>Species Types in Central Zoo by "+title+"</h3><div id='pie_zoo'></div>");
+                var svg = d3.select("#pie_zoo").append("svg").attr("width",800).attr("height",420);
+                svg.append("g").attr("id","zoo")
+                Donut3D.draw("zoo", getData(), 400, 200, 250, 175, 40, 0.4);
+            }
+
+            function getData(){
+                return myData.map(function(d){
+                    return {label:d.label, value:d.value, color:color(d.label)};});
+            }
+        }
+
+        function zoo() {
+            var choice = $("input:radio[name=zoo]:checked").val();
+            if(choice == "pie") {
+                zoo_pie();
+            }
+        }
+
+        $("input:radio[name=pie_choice]").change(function(){
+            zoo_pie();
+        });
+
 
         $("#threats_collapseOne").on('show.bs.collapse', function () {
                 iucn_redlist();
@@ -582,7 +820,7 @@
                 $("#pa_body").html("Loading...").load("/data_insights/protected_areas/area/line/");
         }
 
-        $("#pa_collapseFive").on('show.bs.collapse', function () {
+        $("#pa_collapseOne").on('show.bs.collapse', function () {
             area_chart();
         });
 
@@ -590,13 +828,34 @@
             area_chart();
         });
 
+        $("#pa_collapseTwo").on('show.bs.collapse', function () {
+            var pa1 = $("#pa1").val();
+            var pa2 = $("#pa2").val();
+            $("#pa_body").html("Loading...").load("/data_insights/protected_areas/comparison/"+pa1+"/"+pa2+"/");
+        });
 
+        $("#pa1").on('change', function(){
+            var pa1 = $("#pa1").val();
+            var pa2 = $("#pa2").val();
+            $("#pa_body").html("Loading...").load("/data_insights/protected_areas/comparison/"+pa1+"/"+pa2+"/");
+        });
+
+        $("#pa2").on('change', function(){
+            var pa1 = $("#pa1").val();
+            var pa2 = $("#pa2").val();
+            $("#pa_body").html("Loading...").load("/data_insights/protected_areas/comparison/"+pa1+"/"+pa2+"/");
+        });
+
+        $("#pa_collapseThree").on('show.bs.collapse', function () {
+            zoo();
+        });
 
     </script>
 {% endblock %}
 
 {% block additionalCSS %}
     <link rel="stylesheet"  href="{% static "select2/select2.css" %}">
+    <link rel="stylesheet" href="{% static "css/leaflet.css" %}" />
     <style type="text/css">
         #pie_redlist, #pie_cites {
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -623,6 +882,36 @@
             font-size:14px;
         }
 
+        #map {
+            height: 500px;
+            width: 800px;
+        }
+
+        .info {
+            padding: 6px 8px;
+            font: 14px/16px Arial, Helvetica, sans-serif;
+            background: white;
+            background: rgba(255,255,255,0.95);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            border-radius: 5px;
+        }
+        .info h4 {
+            margin: 0 0 5px;
+            color: #777;
+        }
+
+        .legend {
+            line-height: 18px;
+            color: #555;
+        }
+        .legend i {
+            width: 18px;
+            height: 18px;
+            float: left;
+            margin-right: 8px;
+            opacity: 0.7;
+        }
 
     </style>
+
 {% endblock %}

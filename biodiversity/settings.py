@@ -40,6 +40,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'biodiv',
     'django.contrib.admin',
+    'haystack',
+    'whoosh',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -89,3 +91,13 @@ STATIC_URL = '/assets/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "assets"),
     )
+
+#Search Engine
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
+        'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
+        'INCLUDE_SPELLING':'true'
+    },
+    }
+

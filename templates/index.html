@@ -1,5 +1,5 @@
 {% extends "base/base.html" %}
-
+{% load staticfiles %}
 {% block pageTitle %}
     Biodiversity Inventory of Nepal with Data Analysis and Visualization
 {% endblock %}
@@ -10,10 +10,12 @@
         <div class="container">
             <div class="row">
 
-                <form class="form-search">
+                <form class="form-search" action="search" method="GET">
                     <div class="input-append">
-                        <input type="text" placeholder="Search Species by Scientific name, Common name or Protected Areas" style="width: 550px; height: 40px; padding-left: 10px">
-                        <button type="submit" style="width: 100px; height: 40px;">Search</button>
+                        <div id="searchbar">
+                        <input type="text" name="q" placeholder="Search Species by Scientific name, Common name or Protected Areas" style="width: 550px; height: 40px; padding-left: 10px" class="typeahead">
+                        <button type="submit" style="width: 100px; height: 40px; position: relative; top: 10px;">Search</button>
+                        </div>
                     </div>
                 </form>
 
@@ -107,5 +109,109 @@
     </div>	<!-- /container -->
 
 
+{% endblock %}
+{% block additionalScripts %}
+    <script src="{% static "js/typeahead.bundle.js" %}"></script>
+    <script src="{% static "js/handlebars.js" %}"></script>
+    <script type="text/javascript ">
+        var species = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: '/api/search/species/%QUERY'
+        });
 
+        var common = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('species_id__name'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: '/api/search/common/%QUERY'
+        });
+
+        species.initialize();
+        common.initialize();
+
+        $('#searchbar .typeahead').typeahead({
+                    highlight: true
+                },
+                {
+                    name: 'nba-teams',
+                    displayKey: 'name',
+                    source: species.ttAdapter(),
+                    templates: {
+                        header: '<h3 class="search-title">Scientific Name</h3>'
+                    }
+                },
+                {
+                    name: 'nhl-teams',
+                    displayKey: 'common_name',
+                    source: common.ttAdapter(),
+                    templates: {
+                        header: '<h3 class="search-title">Common Name</h3>',
+                        suggestion: Handlebars.compile('<p>{% verbatim %} {{common_name}}  - (<i>{{species_id__name}}</i>) {% endverbatim %}</p>')
+                    }
+                });
+    </script>
+{% endblock %}
+{% block additionalCSS %}
+    <style type="text/css">
+        #searchbar .search-title {
+            margin: 0 20px 5px 20px;
+            padding: 3px 0;
+            border-bottom: 1px solid #ccc;
+            font-size: 16px;
+            text-align: left;
+        }
+
+        .tt-query,
+        .tt-hint {
+            width: 396px;
+            height: 30px;
+            padding: 8px 12px;
+            font-size: 14px;
+            line-height: 30px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+
+        }
+
+        .tt-query {
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        }
+
+        .tt-hint {
+            color: #fff;
+
+        }
+
+        .tt-dropdown-menu {
+            width: 550px;
+            margin-top: 2px;
+            padding: 8px 0;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            box-shadow: 0 5px 10px rgba(0,0,0,.2);
+            color: #000;
+            text-align: left;
+
+        }
+
+        .tt-suggestion {
+            padding: 3px 20px;
+            font-size: 14px;
+            line-height: 18px;
+
+        }
+
+        .tt-suggestion.tt-cursor { /* UPDATE: newer versions use .tt-suggestion.tt-cursor */
+            color: #fff;
+            background-color: #0097cf;
+
+        }
+
+        .tt-suggestion p {
+            margin: 0;
+        }
+    </style>
 {% endblock %}

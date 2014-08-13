@@ -20,3 +20,11 @@ def common_name(obj):
 @register.filter
 def abstract(obj):
     return obj.getAbstract()
+
+@register.filter
+def initials(obj):
+    arr = obj.split()
+    str = ""
+    for item in arr:
+        str += item[0]
+    return str

@@ -6,13 +6,13 @@
 
     <!-- container -->
     <div class="container">
-
+        {% block breadcrumb %}
         <ol class="breadcrumb">
             <li><a href="/">Home</a></li>
             {% block path %}{% endblock %}
             <li class="active">{% block title %}{% endblock %}</li>
         </ol>
-
+        {% endblock %}
         <div class="row">
 
           <!-- Article main content -->
@@ -23,7 +23,7 @@
             </article>
             <!-- /Article -->
             <!-- Sidebar -->
-            <aside class="col-md-4 sidebar sidebar-right">
+            <aside class="col-md-4 sidebar sidebar-right" id="sidebar">
                 {% block sidebarContents %}
                 {% endblock %}
             </aside>

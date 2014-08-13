@@ -1,0 +1,31 @@
+{% load filters %}
+{% load staticfiles %}
+<div class="thumbnail-list">
+    <ul>
+
+        {% for item in pages %}
+            <li>
+                <a href="/species/{{ item.species_id }}/{{ item.name|slugify }}/" style="text-decoration : none; color : #000000;"">
+                <img src="{% if item|image:150 %}{{ item|image:150|first }}{% else %}{% static "images/default_thumb.png" %}{% endif %}" style="width: 150px; height: 150px;">
+                <h3>{% if item|common_name %}{{ item|common_name|title }} - {% endif %}<i>{{ item.name }}</i></h3>
+                <p>{% if item|abstract %}{{ item|abstract|truncatewords:40|striptags }}{% endif %}</p>
+                </a>
+            </li>
+        {% endfor %}
+
+    </ul>
+</div>
+
+<ul class="pager">
+        {% if pages.has_previous %}
+            <li><a href="#" onclick="page('{{ path }}',{{ pages.previous_page_number }})">&laquo; Prev</a></li>
+        {% endif %}
+
+
+            Page {{ pages.number }} of {{ pages.paginator.num_pages }}
+
+
+        {% if pages.has_next %}
+            <li><a href="#" onclick="page('{{ path }}',{{ pages.next_page_number }})">Next &raquo;</a></li>
+        {% endif %}
+</ul>

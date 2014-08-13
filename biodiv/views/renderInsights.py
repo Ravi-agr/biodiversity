@@ -17,3 +17,8 @@ def area(request, type):
         return render(request, "analytics/sunburst.html", {'type':'area'})
     else:
         return render(request, "analytics/line.html")
+
+def comparison(request, id1, id2):
+    pa1 = ProtectedAreas.objects.get(pa_id = id1)
+    pa2 = ProtectedAreas.objects.get(pa_id = id2)
+    return render(request, "analytics/comparison.html", {'pa1':pa1, 'pa2':pa2})

@@ -14,7 +14,8 @@ urlpatterns = patterns('',
     url(r'^index.html$',home),
     url(r'^about/$',about),
     url(r'^contact/$',contact),
-
+    url(r'search/$', search_results_page),
+    url(r'search/ajax/$', search_results),
 
     url(r'^protected_area/(\d+)/(.*?)/$',protectedArea),
     url(r'^protected_species/$',protectedSpecies),
@@ -45,6 +46,7 @@ urlpatterns = patterns('',
     url(r'api/stackedbar/([a-z|_]+)/(\d+)/$', stackedbar_json),
     url(r'api/bar/([a-z|_]+)/(\d+)/$', bar_chart_json),
 
+    url(r'api/search/([a-z]+)/(.*)$', search),
 
     url(r'species_list/(\d+)/([a-zA-Z]+)/$', species_list),
 
@@ -52,6 +54,7 @@ urlpatterns = patterns('',
     url(r'data_insights/species/tree/$', species_tree),
     url(r'data_insights/iucn/([a-z]+)/([a-zA-Z|_]+)/$',iucn_clazz),
     url(r'data_insights/protected_areas/area/([a-z]+)/$',area),
+    url(r'data_insights/protected_areas/comparison/(\d+)/(\d+)/$',comparison),
 
 
     url(r'^admin/', include(admin.site.urls)),

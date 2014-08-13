@@ -334,3 +334,72 @@ def random_fact():
     facts = f.readlines()
     from random import randrange
     return facts[randrange(len(facts))]
+
+
+def search_results_page(request):
+    keyword = ""
+    pa_with_species = SpeciesPa.objects.values_list('pa_id', flat = True).distinct()
+    pa = ProtectedAreas.objects.filter(pa_id__in = pa_with_species).order_by("pa_id")
+
+    if 'q' in request.GET:
+        keyword = request.GET['q']
+
+    return render(request, 'search_results_page.html', {'keyword':keyword, 'pa':pa})
+
+def search_results(request):
+
+    result_iucn = None
+    result_pa = None
+    if request.GET['iucn'] != "Any":
+        result_iucn = IucnData.objects.filter(status = request.GET['iucn']).values_list("species_id", flat=True)
+
+    if request.GET['pa'] != "Any":
+        result_pa = SpeciesPa.objects.filter(pa_id = request.GET['pa']).values_list("species_id", flat=True)
+
+    kwargs = {}
+    if request.GET['cites'] != "Any": kwargs['cites'] = request.GET['cites']
+    if request.GET['nrdb'] != "Any": kwargs['nrdb'] = request.GET['nrdb']
+    if request.GET.get('protected', False) != "Any": kwargs['protected'] = request.GET.get('protected', False) == "True"
+
+    result_status = Status.objects.filter(**kwargs).values_list("species_id", flat=True)
+    all = Species.objects.all().values_list("species_id", flat=True)
+
+    filter_by = {'species_id__in':set(all)}
+    if 'keyword' in request.GET:
+        filter_by["name__icontains"] = request.GET['keyword']
+
+    if kwargs:
+        filter_by['species_id__in'] &= set(result_status)
+    if result_iucn:
+        filter_by['species_id__in'] &= set(result_iucn)
+
+    if request.GET.get('type',False) != "Any":
+        filter_by['group'] = str(request.GET.get('type',False))
+
+    if result_pa:
+        filter_by['species_id__in'] &= set(result_pa)
+
+
+    if len(filter_by['species_id__in']) == len(all):
+        del filter_by['species_id__in']
+    else:
+        filter_by['species_id__in'] = list(filter_by['species_id__in'])
+
+    pg = 1
+    if 'pg' in request.GET: pg = int(request.GET['pg'])
+
+
+    result = Species.objects.filter(**filter_by).order_by('group','name')
+
+    from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+    paginator = Paginator(result,10)
+    try:
+        pages = paginator.page(pg)
+    except PageNotAnInteger:
+        pages = paginator.page(1)
+    except EmptyPage:
+        pages = paginator.page(paginator.num_pages)
+
+    print request.get_full_path().rsplit('&',1)[0]
+
+    return render(request, 'search_results.html', {'pages':pages, 'path':request.get_full_path().rsplit('&',1)[0]})

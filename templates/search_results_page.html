@@ -1,0 +1,202 @@
+{% extends "base/base-sidebar-right.html" %}
+{% load filters %}
+{% load staticfiles %}
+{% block pageTitle %}{{ keyword }} - Search Results{% endblock%}
+{% block breadcrumb %}{% endblock %}
+
+{% block sidebarContents %}
+    <div class="panel-group" id="accordion">
+    <form class="form-horizontal" role="form" id="filters">
+    <input type="hidden" id="keyword" value="{{ keyword }}">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <b class="panel-title">Search Filter</b>
+        </div>
+        <div class="panel-body">
+                <div class="form-group">
+                    <label for="speciesType" class="col-sm-5 control-label">Species Type</label>
+                    <div class="col-sm-7">
+                    <select class="form-control" id="speciesType" name="speciesType">
+                        <option selected>Any</option>
+                        <option>Mammal</option>
+                        <option>Birds</option>
+                        <option>Herpeto</option>
+                        <option>Fish</option>
+                        <option>Butterfly</option>
+                        <option>Moths</option>
+                        <option>Insects</option>
+                        <option>Spiders</option>
+                        <option>Phanerogams</option>
+                        <option>Bryophytes</option>
+                        <option>Pteridophytes</option>
+                    </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+                <div class="panel-heading">
+                    <b class="panel-title">Status</b>
+                </div>
+                <div class="panel-body">
+                <div class="form-group">
+                    <label for="iucn" class="col-sm-5 control-label">IUCN Red List</label>
+                    <div class="col-sm-7">
+                        <select class="form-control" id="iucn" name="iucn">
+                            <option selected>Any</option>
+                            <option value="CR">Critically Endangered</option>
+                            <option value="EN">Endangered</option>
+                            <option value="VU">Vulnerable</option>
+                            <option value="NT">Near Threatened</option>
+                            <option value="LC">Least Concern</option>
+                            <option value="DD">Data Deficient</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="cites" class="col-sm-5 control-label">CITES Appendix</label>
+                    <div class="col-sm-7">
+                        <select class="form-control" id="cites" name="cites">
+                            <option selected>Any</option>
+                            <option value="I">Appendix I</option>
+                            <option value="II">Appendix II</option>
+                            <option value="III">Appendix III</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="nrdb" class="col-sm-5 control-label">NRDB Stauts</label>
+                    <div class="col-sm-7">
+                        <select class="form-control" id="nrdb" name="nrdb">
+                            <option selected>Any</option>
+                            <option value="EXN">Extinct in Nepal</option>
+                            <option value="C">Critically Endangered</option>
+                            <option value="E">Endangered</option>
+                            <option value="V">Vulnerable</option>
+                            <option value="S">Susceptible</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="protected" class="col-sm-5 control-label">Protected by NG</label>
+                    <div class="col-sm-7">
+                        <select class="form-control" id="protected" name="nrdb">
+                            <option selected>Any</option>
+                            <option value="True">Protected</option>
+                            <option value="False">Not Protected</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-default">
+                <div class="panel-heading">
+                    <b class="panel-title">Location</b>
+                </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label for="pa" class="col-sm-5 control-label">Recorded in</label>
+                    <div class="col-sm-7">
+                        <select class="form-control" id="pa" name="pa">
+                            <option selected>Any</option>
+                            {% for item in pa %}
+                                <option value="{{ item.pa_id }}">{{ item.name }} {{ item.designation|initials }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+             </form>
+        </div>
+
+{% endblock %}
+
+{% block articleContents %}
+    <header class="page-header">
+        <h4 class="page-title">Search results for <b>{{ keyword }}</b></h4>
+    </header>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form role="form">
+                <div class="form-group">
+                    <label for="searchQuery"></label>
+                    <input type="text" id="searchQuery" style="width: 600px; height: 40px; padding-left: 10px" value="{{ keyword }}">
+                    <button type="submit" id="btn_search" style="width: 100px; height: 40px;" >Search</button>
+                </div>
+            </form>
+            <div class="checkbox pull-right">
+                <label>
+                    <input type="checkbox" id="ignore"> Ignore this keyword
+                </label>
+            </div>
+            <hr width="100%">
+            <div id="results">
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block footer %}{% endblock %}
+{% block additionalScripts %}
+    <script type="text/javascript">
+
+    function update_result() {
+        var keyword = $("#keyword").val(),
+                type = $("#speciesType").val(),
+                iucn = $("#iucn").val(),
+                cites = $("#cites").val(),
+                nrdb = $("#nrdb").val(),
+                pa = $("#pa").val(),
+                prot = $("#protected").val();
+        var url = "/search/ajax/?";
+        if(!$("#ignore").is(":checked")) url += "keyword="+keyword+"&";
+        url += "type="+type+"&iucn="+iucn+"&cites="+cites+"&nrdb="+nrdb+"&pa="+pa+"&protected="+prot+"&pg=1";
+        $("#results").load(url);
+    }
+
+    function page(path,num){
+        var url = path + "&pg=" + num;
+        $("#results").load(url);
+    }
+
+    update_result();
+
+    $("#speciesType").change(function(){
+        update_result();
+    });
+    $("#iucn").change(function(){
+        update_result();
+    });
+    $("#cites").change(function(){
+        update_result();
+    });
+    $("#nrdb").change(function(){
+        update_result();
+    });
+    $("#protected").change(function(){
+        update_result();
+    });
+    $("#pa").change(function(){
+        update_result();
+    });
+
+
+        $("#ignore").change(function() {
+           if(this.checked) {
+               $("#searchQuery").prop('disabled', true);
+               $("#btn_search").prop('disabled', true);
+           }
+            else {
+               $("#searchQuery").prop('disabled', false);
+               $("#btn_search").prop('disabled', false);
+           }
+           update_result();
+        });
+
+
+    </script>
+{% endblock %}

@@ -34,23 +34,44 @@
         <div class="panel-heading">
             <b class="panel-title">Fauna Types in Protected Areas</b>
         </div>
-
+        <a href="#" data-toggle="modal" data-target="#myModal" onclick="chart2('.modal-body',500,450); $('.modal-title').html('Fauna Types in Protected Areas');" style="text-decoration: none;">
         <div id="chart2" align="center">
 
 
         </div>
+        </a>
     </div>
 
     <div class="panel panel-info">
         <div class="panel-heading">
             <b class="panel-title">Flora Types in Protected Areas</b>
         </div>
-
+        <a href="#" data-toggle="modal" data-target="#myModal" onclick="chart3('.modal-body',500,450); $('.modal-title').html('Flora Types in Protected Areas');" style="text-decoration: none;">
         <div id="chart3" align="center">
 
 
         </div>
+        </a>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Modal title</h4>
+
+                </div>
+                <div class="modal-body" align="center"></div>
+
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+
 {% endblock %}
 
 {% block articleContents %}
@@ -142,10 +163,13 @@
             }
         })();
 
-        (function(){
-            var margin = {top: 20, right: 20, bottom: 50, left: 40},
-                    width = 350 - margin.left - margin.right,
-                    height = 300 - margin.top - margin.bottom;
+        chart2("#chart2",350,300);
+        chart3("#chart3",350,300);
+
+        function chart2(parent, wdt, hgt){
+            var margin = {top: 20, right: 20, bottom: 60, left: 40},
+                    width = wdt - margin.left - margin.right,
+                    height = hgt - margin.top - margin.bottom;
 
             var x = d3.scale.ordinal()
                     .rangeRoundBands([0, width], .1);
@@ -164,8 +188,8 @@
                     .scale(y)
                     .orient("left")
                     .tickFormat(d3.format(".2s"));
-
-            var svg = d3.select("#chart2").append("svg")
+            $(".modal-body").html("");
+            var svg = d3.select(parent).append("svg")
                     .attr("width", width + margin.left + margin.right)
                     .attr("height", height + margin.top + margin.bottom)
                     .append("g")
@@ -204,12 +228,6 @@
                 svg.append("g")
                         .attr("class", "y axis")
                         .call(yAxis)
-                        .append("text")
-                        .attr("transform", "rotate(-90)")
-                        .attr("y", 6)
-                        .attr("dy", ".71em")
-                        .style("text-anchor", "end")
-                        .text("Population");
 
                 var state = svg.selectAll(".state")
                         .data(data)
@@ -246,12 +264,12 @@
 
             });
 
-        })();
+        };
 
-        (function(){
-            var margin = {top: 20, right: 20, bottom: 50, left: 40},
-                    width = 350 - margin.left - margin.right,
-                    height = 300 - margin.top - margin.bottom;
+        function chart3(parent, wdt, hgt){
+            var margin = {top: 20, right: 20, bottom: 60, left: 40},
+                    width = wdt - margin.left - margin.right,
+                    height = hgt - margin.top - margin.bottom;
 
             var x = d3.scale.ordinal()
                     .rangeRoundBands([0, width], .1);
@@ -270,8 +288,8 @@
                     .scale(y)
                     .orient("left")
                     .tickFormat(d3.format(".2s"));
-
-            var svg = d3.select("#chart3").append("svg")
+            $(".modal-body").html("");
+            var svg = d3.select(parent).append("svg")
                     .attr("width", width + margin.left + margin.right)
                     .attr("height", height + margin.top + margin.bottom)
                     .append("g")
@@ -310,12 +328,7 @@
                 svg.append("g")
                         .attr("class", "y axis")
                         .call(yAxis)
-                        .append("text")
-                        .attr("transform", "rotate(-90)")
-                        .attr("y", 6)
-                        .attr("dy", ".71em")
-                        .style("text-anchor", "end")
-                        .text("Population");
+
 
                 var state = svg.selectAll(".state")
                         .data(data)
@@ -352,7 +365,7 @@
 
             });
 
-        })();
+        }
 
     </script>
     

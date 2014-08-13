@@ -1,0 +1,126 @@
+<style type="text/css">
+    #comparison svg {
+        font: 10px sans-serif;
+    }
+
+    #comparison path {
+        fill: steelblue;
+    }
+
+    #comparison .axis path,
+    #comparison .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+</style>
+<div id="comparison"></div>
+<script>
+    //type,pa,number
+
+    var data = [];
+    $.ajax({
+        url: "/api/bar/pa_species/{{ pa1.pa_id }}/",
+        async: false,
+        dataType: 'json',
+        success: function(d) {
+            for(var i=0; i<d.length; i++) {
+                d[i]["pa"] = "{{ pa1.name }} {{ pa1.designation }}";
+                data.push(d[i])
+            }
+        }
+    });
+
+    $.ajax({
+        url: "/api/bar/pa_species/{{ pa2.pa_id }}/",
+        async: false,
+        dataType: 'json',
+        success: function(d) {
+            for(var i=0; i<d.length; i++) {
+                d[i]["pa"] = "{{ pa2.name }} {{ pa2.designation }}";
+                data.push(d[i])
+            }
+        }
+    });
+
+    console.log(JSON.stringify(data));
+
+    var margin = {top: 20, right: 20, bottom: 30, left: 40},
+            width = 800 - margin.left - margin.right,
+            height = 450 - margin.top - margin.bottom;
+
+    var x0 = d3.scale.ordinal()
+            .rangeRoundBands([0, width], .1);
+
+    var x1 = d3.scale.ordinal();
+
+    var y = d3.scale.linear()
+            .range([height, 0]);
+
+    var color = d3.scale.ordinal()
+            .range(["rgba(11,94,215,.8)", "rgba(245, 143, 8, 0.8)"]);
+
+    var xAxis = d3.svg.axis()
+            .scale(x0)
+            .orient("bottom");
+
+    var yAxis = d3.svg.axis()
+            .scale(y)
+            .orient("left")
+            .tickFormat(d3.format(".2s"));
+
+    var svg = d3.select("#comparison").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    var pas = d3.set(data.map(function(line) { return line.pa; })).values();
+    //console.log(months);
+    x0.domain(data.map(function(d) { return d.name; }));
+    x1.domain(pas).rangeRoundBands([0, x0.rangeBand()]);
+    y.domain([0, d3.max(data, function(d) { return d.value; }) ]);
+
+    svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + height + ")")
+            .call(xAxis);
+
+    svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+            .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text("No. of Species");
+
+    svg.selectAll("rect")
+            .data(data)
+            .enter().append("rect")
+            .attr("width", x1.rangeBand())
+            .attr("x", function(d) { return x0(d.name)+x1(d.pa); })
+            .attr("y", function(d) { return y(+d.value); })
+            .attr("height", function(d) { return height - y(+d.value); })
+            .style("fill", function(d) { return color(d.pa); });
+
+    var legend = svg.selectAll(".legend")
+            .data(pas.slice().reverse())
+            .enter().append("g")
+            .attr("class", "legend")
+            .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+
+    legend.append("rect")
+            .attr("x", width - 18)
+            .attr("width", 18)
+            .attr("height", 18)
+            .style("fill", color);
+
+    legend.append("text")
+            .attr("x", width - 24)
+            .attr("y", 9)
+            .attr("dy", ".35em")
+            .style("text-anchor", "end")
+            .text(function(d) { return d; });
+</script>
