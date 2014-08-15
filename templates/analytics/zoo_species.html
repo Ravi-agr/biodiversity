@@ -1,0 +1,70 @@
+<div class="col-sm-6">
+<table class="table">
+    <tr>
+        <th>Common Name</th>
+        <td>{{ species.common_name }}</td>
+    </tr>
+    {% if species.name %}
+    <tr>
+        <th>Scientific Name</th>
+        <td>{{ species.name }}</td>
+    </tr>
+    {% endif %}
+    <tr>
+        <th>Origin</th>
+        <td>{{ species.origin }}</td>
+    </tr>
+    <tr>
+        <th>Number of Species</th>
+        <td>{{ total }}</td>
+    </tr>
+    {% if species.iucn != "Not Listed" %}
+    <tr>
+        <th>IUCN Red List Status</th>
+        <td>{{ species.iucn }}</td>
+    </tr>
+    {% endif %}
+    {% if species.protected == "Protected" %}
+    <tr>
+        <td colspan="2"><i>Protected under the NPWC Act 1973</i></td>
+    </tr>
+    {% endif %}
+    {% if species.species_id %}
+    <tr>
+        <td colspan="2"><a href="/species/{{ species.species_id.species_id }}/{{ species.common_name|slugify }}/">Full Species Profile</a></td>
+    </tr>
+    {% endif %}
+</table>
+</div>
+<div class="col-sm-6" id="species_gender">
+
+</div>
+
+<script type="text/javascript">
+    var myData = [
+        {% if species.male %}
+            {"label":"Male", "value": {{ species.male }}},
+        {% endif %}
+        {% if species.female %}
+            {"label":"Female", "value": {{ species.female }}},
+        {% endif %}
+        {% if species.unknown %}
+            {"label":"Unknown", "value": {{ species.unknown }}},
+        {% endif %}
+    ];
+//    var myData = [{"value": 11, "label": "EXN"}, {"value": 11, "label": "C"}, {"value": 66, "label": "E"}, {"value": 144, "label": "V"}, {"value": 175, "label": "S"}, {"value": 0, "label": "I"}, {"value": 31, "label": "UR"}];
+
+
+    var color = d3.scale.category20();
+
+        $("#species_gender").html("<div align='center'><b>Number of Species by Gender</b></div><div id='pie_speices_gender'></div>");
+        var svg = d3.select("#pie_speices_gender").append("svg").attr("width",400).attr("height",240);
+        svg.append("g").attr("id","zoo_gender")
+        Donut3D.draw("zoo_gender", getData(), 200, 100, 125, 88, 30, 0.4);
+
+
+    function getData(){
+        return myData.map(function(d){
+            return {label:d.label, value:d.value, color:color(d.label)};});
+    }
+</script>

@@ -11,6 +11,8 @@
                 <p>{% if item|abstract %}{{ item|abstract|truncatewords:40|striptags }}{% endif %}</p>
                 </a>
             </li>
+            {% empty %}
+            <b>No results found!</b>
         {% endfor %}
 
     </ul>

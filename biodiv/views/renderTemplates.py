@@ -1,3 +1,5 @@
+from django.db.models.query_utils import Q
+from requests.exceptions import ConnectionError
 from wikipedia.exceptions import *
 
 __author__ = 'sawal_000'
@@ -291,6 +293,8 @@ def loadTaxa(request, type, keyword):
         description = wikipedia.summary(keyword, sentences = 10)
     except PageError:
         description = ""
+    except ConnectionError:
+        description = ""
         
     clazz = Classification.objects.filter(**{type+'__iexact': keyword}).select_related()[:25]
 
@@ -347,6 +351,8 @@ def search_results_page(request):
     return render(request, 'search_results_page.html', {'keyword':keyword, 'pa':pa})
 
 def search_results(request):
+    from haystack.query import SearchQuerySet
+    from api_views import ValuesQuerySetToDict
 
     result_iucn = None
     result_pa = None
@@ -363,10 +369,23 @@ def search_results(request):
 
     result_status = Status.objects.filter(**kwargs).values_list("species_id", flat=True)
     all = Species.objects.all().values_list("species_id", flat=True)
-
-    filter_by = {'species_id__in':set(all)}
     if 'keyword' in request.GET:
-        filter_by["name__icontains"] = request.GET['keyword']
+#        sqs = SearchQuerySet().filter(content = request.GET['keyword'])
+#        related = []
+#        for x in sqs:
+#            o = x.object.species_id
+#            if type(o) is int:
+#                related.append(o)
+#            else:
+#                related.append(o.species_id)
+
+        related = ValuesQuerySetToDict(CommonNames.objects.filter(common_name__iregex=r"\y{0}\y".format(request.GET['keyword'])).values_list('species_id__species_id', flat=True))
+        related += ValuesQuerySetToDict(Species.objects.filter(name__iregex=r"\y{0}\y".format(request.GET['keyword'])).values_list('species_id', flat=True))
+        related += ValuesQuerySetToDict(Names.objects.filter(synonym__iregex=r"\y{0}\y".format(request.GET['keyword'])).values_list('species_id__species_id', flat=True))
+
+        filter_by = {'species_id__in':set(related)}
+    else:
+        filter_by = {'species_id__in':set(all)}
 
     if kwargs:
         filter_by['species_id__in'] &= set(result_status)
@@ -403,3 +422,4 @@ def search_results(request):
     print request.get_full_path().rsplit('&',1)[0]
 
     return render(request, 'search_results.html', {'pages':pages, 'path':request.get_full_path().rsplit('&',1)[0]})
+

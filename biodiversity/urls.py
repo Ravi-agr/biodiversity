@@ -45,6 +45,7 @@ urlpatterns = patterns('',
     url(r'api/stackedbar/([a-z|_]+)/$', stackedbar_json),
     url(r'api/stackedbar/([a-z|_]+)/(\d+)/$', stackedbar_json),
     url(r'api/bar/([a-z|_]+)/(\d+)/$', bar_chart_json),
+    url(r'api/zoo_search/([a-zA-Z]+)/$', zoo_search),
 
     url(r'api/search/([a-z]+)/(.*)$', search),
 
@@ -55,6 +56,9 @@ urlpatterns = patterns('',
     url(r'data_insights/iucn/([a-z]+)/([a-zA-Z|_]+)/$',iucn_clazz),
     url(r'data_insights/protected_areas/area/([a-z]+)/$',area),
     url(r'data_insights/protected_areas/comparison/(\d+)/(\d+)/$',comparison),
+    url(r'data_insights/protected_areas/bar/([a-z]+)/$',bar),
+    url(r'data_insights/zoo/species/(\d+)/$',species_profile),
+
 
 
     url(r'^admin/', include(admin.site.urls)),

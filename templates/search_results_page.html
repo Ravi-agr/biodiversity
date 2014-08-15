@@ -116,15 +116,17 @@
 
 {% block articleContents %}
     <header class="page-header">
-        <h4 class="page-title">Search results for <b>{{ keyword }}</b></h4>
+        <h4 class="page-title">Search results for <span id="query"><b>{{ keyword }}</b></span></h4>
     </header>
     <div class="panel panel-default">
         <div class="panel-body">
-            <form role="form">
+            <form role="form" id="searchForm">
                 <div class="form-group">
                     <label for="searchQuery"></label>
-                    <input type="text" id="searchQuery" style="width: 600px; height: 40px; padding-left: 10px" value="{{ keyword }}">
-                    <button type="submit" id="btn_search" style="width: 100px; height: 40px;" >Search</button>
+                    <div id="searchbar">
+                    <input type="text" id="searchQuery" style="width: 600px; height: 40px; padding-left: 10px" value="{{ keyword }}" class="typeahead"  onkeydown="pressed(event)">
+                    <button type="button" id="btn_search" style="width: 100px; height: 40px;position: relative; top: 10px;" >Search</button>
+                    </div>
                 </div>
             </form>
             <div class="checkbox pull-right">
@@ -142,10 +144,51 @@
 {% endblock %}
 {% block footer %}{% endblock %}
 {% block additionalScripts %}
+    <script src="{% static "js/typeahead.bundle.js" %}"></script>
+    <script src="{% static "js/handlebars.js" %}"></script>
+    <script type="text/javascript ">
+        var species = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: '/api/search/species/%QUERY'
+        });
+
+        var common = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('species_id__name'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: '/api/search/common/%QUERY'
+        });
+
+        species.initialize();
+        common.initialize();
+
+        $('#searchbar .typeahead').typeahead({
+                    highlight: true
+                },
+                {
+                    name: 'nba-teams',
+                    displayKey: 'name',
+                    source: species.ttAdapter(),
+                    templates: {
+                        header: '<h3 class="search-title">Scientific Name</h3>'
+                    }
+                },
+                {
+                    name: 'nhl-teams',
+                    displayKey: 'common_name',
+                    source: common.ttAdapter(),
+                    templates: {
+                        header: '<h3 class="search-title">Common Name</h3>',
+                        suggestion: Handlebars.compile('<p>{% verbatim %} {{common_name}}  - (<i>{{species_id__name}}</i>) {% endverbatim %}</p>')
+                    }
+                });
+    </script>
+
+
     <script type="text/javascript">
 
     function update_result() {
-        var keyword = $("#keyword").val(),
+        var keyword = encodeURIComponent($("#keyword").val()),
                 type = $("#speciesType").val(),
                 iucn = $("#iucn").val(),
                 cites = $("#cites").val(),
@@ -156,14 +199,18 @@
         if(!$("#ignore").is(":checked")) url += "keyword="+keyword+"&";
         url += "type="+type+"&iucn="+iucn+"&cites="+cites+"&nrdb="+nrdb+"&pa="+pa+"&protected="+prot+"&pg=1";
         $("#results").load(url);
+        $("#query").html("<b>"+decodeURIComponent(keyword)+"</b>");
+        window.history.pushState("object or string", keyword + "- Search Results", "/search/?q="+encodeURIComponent(keyword));
+        document.title = keyword + "- Search Results";
     }
 
     function page(path,num){
         var url = path + "&pg=" + num;
         $("#results").load(url);
     }
-
-    update_result();
+    $(function(){
+        update_result();
+    });
 
     $("#speciesType").change(function(){
         update_result();
@@ -197,6 +244,93 @@
            update_result();
         });
 
+        $("#searchQuery").change(function(){
+            $("#keyword").val($("#searchQuery").val());
+        });
+
+        $("#searchForm").submit(function(){
+            $("#keyword").val($("#searchQuery").val());
+           update_result();
+            return false;
+        });
+
+        $("#btn_search").click(function(){
+            $("#keyword").val($("#searchQuery").val());
+           update_result();
+        });
+
+    function pressed(e) {
+        if ( (window.event ? event.keyCode : e.which) == 13) {
+            $("#keyword").val($("#searchQuery").val());
+            update_result();
+        }
+    }
 
     </script>
+
+{% endblock %}
+
+{% block additionalCSS %}
+    <style type="text/css">
+        #searchbar .search-title {
+            margin: 0 20px 5px 20px;
+            padding: 3px 0;
+            border-bottom: 1px solid #ccc;
+            font-size: 16px;
+            text-align: left;
+        }
+
+        .tt-query,
+        .tt-hint {
+            width: 396px;
+            height: 30px;
+            padding: 8px 12px;
+            font-size: 14px;
+            line-height: 30px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            outline: none;
+
+        }
+
+        .tt-query {
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        }
+
+        .tt-hint {
+            color: #fff;
+
+        }
+
+        .tt-dropdown-menu {
+            width: 550px;
+            margin-top: 2px;
+            padding: 8px 0;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            box-shadow: 0 5px 10px rgba(0,0,0,.2);
+            color: #000;
+            text-align: left;
+
+        }
+
+        .tt-suggestion {
+            padding: 3px 20px;
+            font-size: 14px;
+            line-height: 18px;
+
+        }
+
+        .tt-suggestion.tt-cursor { /* UPDATE: newer versions use .tt-suggestion.tt-cursor */
+            color: #fff;
+            background-color: #0097cf;
+
+        }
+
+        .tt-suggestion p {
+            margin: 0;
+        }
+    </style>
 {% endblock %}
